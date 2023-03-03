@@ -18,25 +18,23 @@
   <meta name="author" content="杨靖成">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、简单的责任链模式 package com.example.demo.interfaces;  import java.util.ArrayList;  public class FilterChanel &amp;#123;      private ArrayList&lt;Filter&gt; filterList &#x3D; new ArrayList&lt;&gt;();      public vo">
+    <meta name="description" content="{“format”:”laketable”,”type”:”Table”,”version”:1.3,”larkJson”:true,”sheet”:[{“columns”:[{“name”:”名称”,”type”:”textarea”,”id”:”yiPP6YngiY4FnbgyyrXrEcOmX1GTgY6u”},{“name”:”状态”,”type”:”select”,”id”:”uL9OZ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="责任链模式">
-<meta property="og:url" content="http://example.com/2022/08/16/gzgb3x/index.html">
+<meta property="og:title" content="待办清单">
+<meta property="og:url" content="http://example.com/2023/03/02/gttyhocuqgdv408o/index.html">
 <meta property="og:site_name" content="lensman&#39;s writing time">
-<meta property="og:description" content="1、简单的责任链模式 package com.example.demo.interfaces;  import java.util.ArrayList;  public class FilterChanel &amp;#123;      private ArrayList&lt;Filter&gt; filterList &#x3D; new ArrayList&lt;&gt;();      public vo">
+<meta property="og:description" content="{“format”:”laketable”,”type”:”Table”,”version”:1.3,”larkJson”:true,”sheet”:[{“columns”:[{“name”:”名称”,”type”:”textarea”,”id”:”yiPP6YngiY4FnbgyyrXrEcOmX1GTgY6u”},{“name”:”状态”,”type”:”select”,”id”:”uL9OZ">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fjkdt6aUQCBjka1amFxEDFkLVMzO.png">
-<meta property="article:published_time" content="2022-08-16T02:32:53.000Z">
-<meta property="article:modified_time" content="2023-03-03T04:01:40.800Z">
+<meta property="article:published_time" content="2023-03-02T12:23:52.000Z">
+<meta property="article:modified_time" content="2023-03-03T04:01:35.138Z">
 <meta property="article:author" content="杨靖成">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fjkdt6aUQCBjka1amFxEDFkLVMzO.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>责任链模式 - lensman&#39;s writing time</title>
+  <title>待办清单 - lensman&#39;s writing time</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +195,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">责任链模式</span>
+            <span id="subtitle">待办清单</span>
           
         </div>
 
@@ -208,8 +206,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-16 10:32" pubdate>
-          2022年8月16日 上午
+        <time datetime="2023-03-02 20:23" pubdate>
+          2023年3月2日 晚上
         </time>
       </span>
     
@@ -220,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          929 字
+          2.7k 字
         
       </span>
     
@@ -231,7 +229,7 @@
         
         
         
-          8 分钟
+          23 分钟
         
       </span>
     
@@ -277,66 +275,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">责任链模式</h1>
+            <h1 style="display: none">待办清单</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="1、简单的责任链模式"><a href="#1、简单的责任链模式" class="headerlink" title="1、简单的责任链模式"></a>1、简单的责任链模式</h2><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fjkdt6aUQCBjka1amFxEDFkLVMzO.png" srcset="/img/loading.gif" lazyload></p>
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.example.demo.interfaces;
-
-<span class="hljs-keyword">import</span> java.util.ArrayList;
-
-<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FilterChanel</span> &#123;
-
-    <span class="hljs-keyword">private</span> ArrayList&lt;Filter&gt; filterList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
-
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addFilters</span><span class="hljs-params">(Filter filter)</span> &#123;
-        <span class="hljs-built_in">this</span>.filterList.add(filter);
-    &#125;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doChanelFilter</span><span class="hljs-params">()</span> &#123;
-        <span class="hljs-keyword">for</span> (Filter filter : filterList) &#123;
-            filter.doFilter();
-        &#125;
-    &#125;
-&#125;
-</code></pre></div>
-
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Filter</span> &#123;
-    <span class="hljs-keyword">void</span> <span class="hljs-title function_">doFilter</span><span class="hljs-params">()</span>;
-&#125;</code></pre></div>
-
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FilterOne</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Filter</span>&#123;
-    <span class="hljs-meta">@Override</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doFilter</span><span class="hljs-params">()</span> &#123;
-        System.out.println(<span class="hljs-string">&quot;filter one&quot;</span>);
-    &#125;
-&#125;</code></pre></div>
-
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FilterTwo</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Filter</span>&#123;
-    <span class="hljs-meta">@Override</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doFilter</span><span class="hljs-params">()</span> &#123;
-        System.out.println(<span class="hljs-string">&quot;filter two&quot;</span>);
-    &#125;
-&#125;</code></pre></div>
-
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FilterChanel</span> &#123;
-
-    <span class="hljs-keyword">private</span> ArrayList&lt;Filter&gt; filterList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
-
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addFilters</span><span class="hljs-params">(Filter filter)</span> &#123;
-        <span class="hljs-built_in">this</span>.filterList.add(filter);
-    &#125;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doChanelFilter</span><span class="hljs-params">()</span> &#123;
-        <span class="hljs-keyword">for</span> (Filter filter : filterList) &#123;
-            filter.doFilter();
-        &#125;
-    &#125;
-&#125;</code></pre></div>
-
-<p>2、管道-责任链模式</p>
+                <p>{“format”:”laketable”,”type”:”Table”,”version”:1.3,”larkJson”:true,”sheet”:[{“columns”:[{“name”:”名称”,”type”:”textarea”,”id”:”yiPP6YngiY4FnbgyyrXrEcOmX1GTgY6u”},{“name”:”状态”,”type”:”select”,”id”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”options”:[{“id”:”VpgReE”,”value”:”待处理”,”color”:”#FBD3D0”},{“id”:”SLOlge”,”value”:”进行中”,”color”:”#E4F7D2”},{“id”:”G1rWUK”,”value”:”已完成”,”color”:”#F7E9BC”},{“id”:”4AubVw”,”value”:”已取消”,”color”:”#C4E4F5”}],”color”:true},{“name”:”标签”,”type”:”multiSelect”,”id”:”yyWTgc358UoZKB6eovH067GWrXgxoVa2”,”options”:[{“id”:”x916yh”,”value”:”标签 1”,”color”:”#E8E8E8”},{“id”:”1qbfw1”,”value”:”标签 2”,”color”:”#E8E8E8”},{“id”:”O04PgI”,”value”:”标签 3”,”color”:”#E8E8E8”},{“id”:”a0PRl4”,”value”:”标签 4”,”color”:”#E8E8E8”},{“id”:”iLYrS9”,”value”:”标签 5”,”color”:”#E8E8E8”}],”color”:true},{“name”:”截止日期”,”type”:”date”,”id”:”szgWeF8wysOGXaWx86nRIUGYZY4gINAB”}],”colCount”:4,”defaultView”:”kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”,”activeView”:”kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”,”id”:”sd7sygo7m8nqkaqgnuair5swfkeg2s0s”,”views”:{“kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”:{“showField”:false,”index”:0,”groupData”:[{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“atxmf24yi6mzqq8xv41yzwoh22sw8fst”],”titleValue”:[“VpgReE”],”value”:”待处理”},{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“ewz92wir225ti9g40lhzel26sgk2uciw”,”uu84l26d71oqcltf1zmsw4dxh08y6n4a”,”afi8txtfd0x0onakihbv010c8du1avvn”,”mligpwkx78y6q1py62yg3hgbtgwmas8x”],”titleValue”:[“SLOlge”],”value”:”进行中”},{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“midy1z8rd5v7gny9t6lw75qqygpi5xi3”,”fce3vkf9ph06afbnw444060nzz8y0p0x”,”mf6h90yububmymehopcxoqw4qsa4vgei”],”titleValue”:[“G1rWUK”],”value”:”已完成”},{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“zk6s10umvv0zcvtvggz22t3zpoygeez0”],”titleValue”:[“4AubVw”],”value”:”已取消”},{“rows”:[],”titleValue”:””,”value”:””}],”frozenCol”:0,”id”:”kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”,”name”:”看板视图（点击切换）”,”type”:”KANBAN”,”tableId”:”sd7sygo7m8nqkaqgnuair5swfkeg2s0s”,”rows”:[{“id”:”atxmf24yi6mzqq8xv41yzwoh22sw8fst”},{“id”:”ewz92wir225ti9g40lhzel26sgk2uciw”},{“id”:”uu84l26d71oqcltf1zmsw4dxh08y6n4a”},{“id”:”afi8txtfd0x0onakihbv010c8du1avvn”},{“id”:”mligpwkx78y6q1py62yg3hgbtgwmas8x”},{“id”:”midy1z8rd5v7gny9t6lw75qqygpi5xi3”},{“id”:”fce3vkf9ph06afbnw444060nzz8y0p0x”},{“id”:”mf6h90yububmymehopcxoqw4qsa4vgei”},{“id”:”zk6s10umvv0zcvtvggz22t3zpoygeez0”}],”columns”:[{“id”:”yiPP6YngiY4FnbgyyrXrEcOmX1GTgY6u”,”hidden”:false},{“id”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”hidden”:true},{“id”:”yyWTgc358UoZKB6eovH067GWrXgxoVa2”,”hidden”:false},{“id”:”szgWeF8wysOGXaWx86nRIUGYZY4gINAB”,”hidden”:true}],”group”:[{“id”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”type”:”asc”}]}}}]}</p>
 
                 
               </div>
@@ -354,8 +298,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>责任链模式</div>
-      <div>http://example.com/2022/08/16/gzgb3x/</div>
+      <div>待办清单</div>
+      <div>http://example.com/2023/03/02/gttyhocuqgdv408o/</div>
     </div>
     <div class="license-meta">
       
@@ -367,7 +311,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年8月16日</div>
+          <div>2023年3月2日</div>
         </div>
       
       
@@ -399,15 +343,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/03/02/gttyhocuqgdv408o/" title="待办清单">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">待办清单</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2022/08/16/gzgb3x/" title="责任链模式">
+                        <span class="hidden-mobile">责任链模式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
