@@ -4,11 +4,63 @@
   
   
   <entry>
-    <title>待办清单</title>
-    <link href="/2023/03/02/gttyhocuqgdv408o/"/>
-    <url>/2023/03/02/gttyhocuqgdv408o/</url>
+    <title>Docker——Nacos（单机）</title>
+    <link href="/2023/03/03/oeaziez1mwb4q3so/"/>
+    <url>/2023/03/03/oeaziez1mwb4q3so/</url>
     
-    <content type="html"><![CDATA[<p>{“format”:”laketable”,”type”:”Table”,”version”:1.3,”larkJson”:true,”sheet”:[{“columns”:[{“name”:”名称”,”type”:”textarea”,”id”:”yiPP6YngiY4FnbgyyrXrEcOmX1GTgY6u”},{“name”:”状态”,”type”:”select”,”id”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”options”:[{“id”:”VpgReE”,”value”:”待处理”,”color”:”#FBD3D0”},{“id”:”SLOlge”,”value”:”进行中”,”color”:”#E4F7D2”},{“id”:”G1rWUK”,”value”:”已完成”,”color”:”#F7E9BC”},{“id”:”4AubVw”,”value”:”已取消”,”color”:”#C4E4F5”}],”color”:true},{“name”:”标签”,”type”:”multiSelect”,”id”:”yyWTgc358UoZKB6eovH067GWrXgxoVa2”,”options”:[{“id”:”x916yh”,”value”:”标签 1”,”color”:”#E8E8E8”},{“id”:”1qbfw1”,”value”:”标签 2”,”color”:”#E8E8E8”},{“id”:”O04PgI”,”value”:”标签 3”,”color”:”#E8E8E8”},{“id”:”a0PRl4”,”value”:”标签 4”,”color”:”#E8E8E8”},{“id”:”iLYrS9”,”value”:”标签 5”,”color”:”#E8E8E8”}],”color”:true},{“name”:”截止日期”,”type”:”date”,”id”:”szgWeF8wysOGXaWx86nRIUGYZY4gINAB”}],”colCount”:4,”defaultView”:”kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”,”activeView”:”kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”,”id”:”sd7sygo7m8nqkaqgnuair5swfkeg2s0s”,”views”:{“kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”:{“showField”:false,”index”:0,”groupData”:[{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“atxmf24yi6mzqq8xv41yzwoh22sw8fst”],”titleValue”:[“VpgReE”],”value”:”待处理”},{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“ewz92wir225ti9g40lhzel26sgk2uciw”,”uu84l26d71oqcltf1zmsw4dxh08y6n4a”,”afi8txtfd0x0onakihbv010c8du1avvn”,”mligpwkx78y6q1py62yg3hgbtgwmas8x”],”titleValue”:[“SLOlge”],”value”:”进行中”},{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“midy1z8rd5v7gny9t6lw75qqygpi5xi3”,”fce3vkf9ph06afbnw444060nzz8y0p0x”,”mf6h90yububmymehopcxoqw4qsa4vgei”],”titleValue”:[“G1rWUK”],”value”:”已完成”},{“groupBy”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”rows”:[“zk6s10umvv0zcvtvggz22t3zpoygeez0”],”titleValue”:[“4AubVw”],”value”:”已取消”},{“rows”:[],”titleValue”:””,”value”:””}],”frozenCol”:0,”id”:”kiv57gvlpgz2u74ap8uyvyb0hgq2c3zs”,”name”:”看板视图（点击切换）”,”type”:”KANBAN”,”tableId”:”sd7sygo7m8nqkaqgnuair5swfkeg2s0s”,”rows”:[{“id”:”atxmf24yi6mzqq8xv41yzwoh22sw8fst”},{“id”:”ewz92wir225ti9g40lhzel26sgk2uciw”},{“id”:”uu84l26d71oqcltf1zmsw4dxh08y6n4a”},{“id”:”afi8txtfd0x0onakihbv010c8du1avvn”},{“id”:”mligpwkx78y6q1py62yg3hgbtgwmas8x”},{“id”:”midy1z8rd5v7gny9t6lw75qqygpi5xi3”},{“id”:”fce3vkf9ph06afbnw444060nzz8y0p0x”},{“id”:”mf6h90yububmymehopcxoqw4qsa4vgei”},{“id”:”zk6s10umvv0zcvtvggz22t3zpoygeez0”}],”columns”:[{“id”:”yiPP6YngiY4FnbgyyrXrEcOmX1GTgY6u”,”hidden”:false},{“id”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”hidden”:true},{“id”:”yyWTgc358UoZKB6eovH067GWrXgxoVa2”,”hidden”:false},{“id”:”szgWeF8wysOGXaWx86nRIUGYZY4gINAB”,”hidden”:true}],”group”:[{“id”:”uL9OZZ5dIleGLPGa2kFuwRysOSxIefTy”,”type”:”asc”}]}}}]}</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><blockquote><p>快速启动一个注册中心在本地</p></blockquote><h2 id="单机-Nacos-镜像"><a href="#单机-Nacos-镜像" class="headerlink" title="单机 Nacos 镜像"></a>单机 Nacos 镜像</h2><div class="code-wrapper"><pre><code class="hljs shell">docker run --name nacos-standalone -e MODE=standalone -d -p 8848:8848 -p 9848:9848 -p 9849:9849 nacos/nacos-server:2.0.0</code></pre></div><h2 id="单机-Nacos-镜像-Mysql-启动"><a href="#单机-Nacos-镜像-Mysql-启动" class="headerlink" title="单机 Nacos 镜像-Mysql 启动"></a>单机 Nacos 镜像-Mysql 启动</h2><p><strong>参考：</strong></p><blockquote><p>注意，这里面会用到.env 这个环境变量，记得自己更改一下</p></blockquote><p><a href="https://blog.csdn.net/weixin_42542222/article/details/118354530">nacos 部署 docker-compose + mysql 模式<em>JJH</em>的博客-CSDN 博客</a><br><strong>参考：</strong><br><a href="https://github.com/alibaba/nacos/blob/develop/distribution/conf/mysql-schema.sql">nacos/mysql-schema.sql at develop · alibaba/nacos</a></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Docker——Redis（单机）</title>
+    <link href="/2023/03/03/wxdfug2q1080b5c8/"/>
+    <url>/2023/03/03/wxdfug2q1080b5c8/</url>
+    
+    <content type="html"><![CDATA[<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><blockquote><p>跑起来一个单体的 Redis 容器</p></blockquote><h2 id="单机-Redis-镜像"><a href="#单机-Redis-镜像" class="headerlink" title="单机 Redis 镜像"></a>单机 Redis 镜像</h2><div class="code-wrapper"><pre><code class="hljs shell">docker run -itd --name redis -p 6379:6379 redis --requirepass &#x27;521521&#x27;</code></pre></div>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Docker——Mysql（单机）</title>
+    <link href="/2023/03/03/uwuvbm7fcx5ohkt0/"/>
+    <url>/2023/03/03/uwuvbm7fcx5ohkt0/</url>
+    
+    <content type="html"><![CDATA[<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><blockquote><p>快速跑起来一个 Mysql 的镜像</p></blockquote><h2 id="单机-Mysql-镜像"><a href="#单机-Mysql-镜像" class="headerlink" title="单机 Mysql 镜像"></a>单机 Mysql 镜像</h2><ol><li>5.7 版本</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=521521 --name mysql -v /app/docker/mysql/my.cnf:/etc/mysql/my.cnf -v /app/docker/mysql/db:/var/lib/mysql mysql:5.7</code></pre></div><ol start="2"><li>8.0 版本</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker run -it -d --name mysql --net=host -m 500m -v /root/mysql/data:/var/lib/mysql -v /root/mysql/config:/etc/mysql/conf.d  -e MYSQL_ROOT_PASSWORD=abc123456 -e TZ=Asia/Shanghai mysql:8.0.21 --lower_case_table_names=1</code></pre></div><p>还需要进入到容器更改是否可以远程连接</p><div class="code-wrapper"><pre><code class="hljs shell">docker exec -it mysql bash</code></pre></div><p>还需要更改对应用户的链接</p><div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">允许远程连接</span>ALTER USER &#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;abc123456&#x27;;<span class="hljs-meta prompt_">#</span><span class="language-bash">刷新数据库</span>flush privileges;</code></pre></div>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Docker基础命令</title>
+    <link href="/2023/03/03/ada1oluaseecquo4/"/>
+    <url>/2023/03/03/ada1oluaseecquo4/</url>
+    
+    <content type="html"><![CDATA[<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><blockquote><p>经常要找一些 Docekr 的基础命令，这里面作一个总结</p></blockquote><h2 id="项目目标"><a href="#项目目标" class="headerlink" title="项目目标"></a>项目目标</h2><blockquote><p>了解&amp;熟悉 Docker 的一些命令</p></blockquote><h2 id="具体细节"><a href="#具体细节" class="headerlink" title="具体细节"></a>具体细节</h2><ol><li>查看当前 docker 有多少镜像</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker images</code></pre></div><ol start="2"><li>查看当前服务有多少容器</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker ps -a</code></pre></div><ol start="3"><li>docker 容器启动</li></ol><div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">举个例子</span>docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=521521 --name mysql -v /app/docker/mysql/my.cnf:/etc/mysql/my.cnf -v /app/docker/mysql/db:/var/lib/mysql mysql:5.7</code></pre></div><ol start="4"><li>进入容器内部</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker exec -it [xxxx容器] bash</code></pre></div><ol start="5"><li>将宿主机的文件拷贝进入容器</li></ol><div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">docker <span class="hljs-built_in">cp</span> 本地文件路径 容器ID/容器NAME:容器内路径</span>docker cp /Users/wuhanxue/Downloads/rabbitmq_delayed_message_exchange-3.9.0.ez 1faca6a70742:/opt/rabbitmq/plugins</code></pre></div><ol start="6"><li>强制移除容器</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker rm -f [xxxxx容器]</code></pre></div><ol start="7"><li>移除镜像</li></ol><div class="code-wrapper"><pre><code class="hljs shell">docker rmi [xxxxx镜像]</code></pre></div><ol start="8"><li>删除所有未运行的镜像</li></ol><div class="code-wrapper"><pre><code class="hljs shell">sudo docker rm $(sudo docker ps -a -q)</code></pre></div>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Docker&amp;Compose——安装</title>
+    <link href="/2023/03/03/uq7l3qt11popnbhl/"/>
+    <url>/2023/03/03/uq7l3qt11popnbhl/</url>
+    
+    <content type="html"><![CDATA[<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><blockquote><p>当前每次都要上百度，阿里找对应的命令</p></blockquote><ul><li>换了新的机器就要找一次</li></ul><h2 id="项目目标"><a href="#项目目标" class="headerlink" title="项目目标"></a>项目目标</h2><blockquote><p>一键解决安装 Docker 的问题</p><ol><li>命令持久可用</li><li>全自动</li></ol></blockquote><h2 id="关键事项"><a href="#关键事项" class="headerlink" title="关键事项"></a>关键事项</h2><blockquote><p>Linux 的机器不可以是 ARM 架构的</p></blockquote><ul><li>注意 Linux 的机器的基础架构</li><li>注意 Linux 的网络速度</li></ul><h2 id="具体脚本"><a href="#具体脚本" class="headerlink" title="具体脚本"></a>具体脚本</h2><blockquote><p>下面是两种方式，具体看个人习惯</p></blockquote><p>1、脚本的具体内容可以自己复制出来新建文件</p><div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">step 1: 安装必要的一些系统工具</span>sudo yum install -y yum-utils device-mapper-persistent-data lvm2<span class="hljs-meta prompt_"># </span><span class="language-bash">Step 2: 添加软件源信息</span>sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo<span class="hljs-meta prompt_"># </span><span class="language-bash">Step 3: 更新并安装 Docker-CE</span>sudo yum makecache fastsudo yum -y install docker-ce<span class="hljs-meta prompt_"># </span><span class="language-bash">Step 4: 开启Docker服务</span>sudo service docker startcurl -L https://get.daocloud.io/docker/compose/releases/download/v2.2.2/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-composechmod +x /usr/local/bin/docker-compose</code></pre></div><p>2、脚本文件可直接下载使用<br><a href="https://www.yuque.com/attachments/yuque/0/2023/sh/3009901/1677819222963-3b77a451-0c55-4a77-a4b9-19594c29ff66.sh">add-docker-and-compose.sh</a></p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ol><li>上传脚本</li><li>赋权脚本</li></ol><div class="code-wrapper"><pre><code class="hljs shell">chmod -R 777 脚本.sh</code></pre></div><ol start="3"><li>运行脚本</li></ol><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FqlcZMnI8p2d305xycDcrbDfrI5l.png"></p><h2 id="检验结果"><a href="#检验结果" class="headerlink" title="检验结果"></a>检验结果</h2><div class="code-wrapper"><pre><code class="hljs shell">docker -vdocker-compose -v</code></pre></div><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FoJvzsezXvQv3VTmfuVYbiUP4V8u.png"></p>]]></content>
     
     
     

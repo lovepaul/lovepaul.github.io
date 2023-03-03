@@ -66,7 +66,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -223,15 +223,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/03/02/gttyhocuqgdv408o/" target="_self">
-          待办清单
+        <a href="/2023/03/03/oeaziez1mwb4q3so/" target="_self">
+          Docker——Nacos（单机）
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/02/gttyhocuqgdv408o/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/oeaziez1mwb4q3so/" target="_self">
         <div>
-          
+          项目背景 快速启动一个注册中心在本地  单机 Nacos 镜像docker run --name nacos-standalone -e MODE=standalone -d -p 8848:8848 -p 9848:9848 -p 9849:9849 nacos/nacos-server:2.0.0  单机 Nacos 镜像-Mysql 启动参考：  注意，这里面会用到.env 这个环境变量，记
         </div>
       </a>
 
@@ -239,8 +239,140 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-02 20:23" pubdate>
-              2023-03-02
+            <time datetime="2023-03-03 18:39" pubdate>
+              2023-03-03
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/03/03/wxdfug2q1080b5c8/" target="_self">
+          Docker——Redis（单机）
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/wxdfug2q1080b5c8/" target="_self">
+        <div>
+          项目背景 跑起来一个单体的 Redis 容器  单机 Redis 镜像docker run -itd --name redis -p 6379:6379 redis --requirepass &#x27;521521&#x27;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-03 18:37" pubdate>
+              2023-03-03
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/03/03/uwuvbm7fcx5ohkt0/" target="_self">
+          Docker——Mysql（单机）
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/uwuvbm7fcx5ohkt0/" target="_self">
+        <div>
+          项目背景 快速跑起来一个 Mysql 的镜像  单机 Mysql 镜像 5.7 版本  docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=521521 --name mysql -v /app/docker/mysql/my.cnf:/etc/mysql/my.cnf -v /app/docker/mysql/db:/var/lib/mysql m
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-03 18:18" pubdate>
+              2023-03-03
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/03/03/ada1oluaseecquo4/" target="_self">
+          Docker基础命令
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/ada1oluaseecquo4/" target="_self">
+        <div>
+          项目背景 经常要找一些 Docekr 的基础命令，这里面作一个总结  项目目标 了解&amp;熟悉 Docker 的一些命令  具体细节 查看当前 docker 有多少镜像  docker images   查看当前服务有多少容器  docker ps -a   docker 容器启动  # 举个例子 docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWOR
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-03 17:57" pubdate>
+              2023-03-03
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/03/03/uq7l3qt11popnbhl/" target="_self">
+          Docker&amp;Compose——安装
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/uq7l3qt11popnbhl/" target="_self">
+        <div>
+          项目背景 当前每次都要上百度，阿里找对应的命令   换了新的机器就要找一次  项目目标 一键解决安装 Docker 的问题  命令持久可用 全自动   关键事项 Linux 的机器不可以是 ARM 架构的   注意 Linux 的机器的基础架构 注意 Linux 的网络速度  具体脚本 下面是两种方式，具体看个人习惯  1、脚本的具体内容可以自己复制出来新建文件 # step 1: 安装必要的一些
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-03 12:16" pubdate>
+              2023-03-03
             </time>
           </div>
         
