@@ -1,0 +1,848 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/good.png">
+  <link rel="icon" href="/img/good.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="杨靖成">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="问题现象 订单服务器链接不上，超时。 没有熔断措施，导致其他上游服务超时。 服务器雪崩，整个环境不可用  项目目标  解决线上问题，排查问题，找到具体代码 分析 JVM   关键事项 使用 Visualvm 分析 下载 dump 文件，分析 dump 文件 基础环境：Java1.8 版本，IDEA，  复现问题 问题的主要就是对象在频繁的申请，频繁的放入，导致堆被撑爆   编写对应的代码，其实对应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FullGC">
+<meta property="og:url" content="http://example.com/2023/03/07/ri0y3cgry9p5u9et/index.html">
+<meta property="og:site_name" content="lensman&#39;s writing time">
+<meta property="og:description" content="问题现象 订单服务器链接不上，超时。 没有熔断措施，导致其他上游服务超时。 服务器雪崩，整个环境不可用  项目目标  解决线上问题，排查问题，找到具体代码 分析 JVM   关键事项 使用 Visualvm 分析 下载 dump 文件，分析 dump 文件 基础环境：Java1.8 版本，IDEA，  复现问题 问题的主要就是对象在频繁的申请，频繁的放入，导致堆被撑爆   编写对应的代码，其实对应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FpSvS-GuvwQXCJzgQvSyNZKxmNgC.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fi9XYL9kCWleDq2ckH7zn43ICbpX.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fu36lWKUK60El8A11-bImj4RzCpa.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FvShN2oc4ooKMb1-M4s3Z_pXcyzA.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FsNsdWX1vWpRXdzTTNZw8_oyt16B.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FnwoLx4VsYW9F6Z-pXJ39F8zBhxc.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FloP7RXRrklZW9Hldw3eKx0qPlG2.png">
+<meta property="article:published_time" content="2023-03-07T02:54:19.000Z">
+<meta property="article:modified_time" content="2023-03-07T04:28:23.474Z">
+<meta property="article:author" content="杨靖成">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>FullGC - lensman&#39;s writing time</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_788497_63oerieondh.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lensman&#39;s Writing Time</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/background.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">FullGC</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-07 10:54" pubdate>
+          2023年3月7日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">FullGC</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h2><ul>
+<li>订单服务器链接不上，超时。</li>
+<li>没有熔断措施，导致其他上游服务超时。</li>
+<li>服务器雪崩，整个环境不可用</li>
+</ul>
+<h2 id="项目目标"><a href="#项目目标" class="headerlink" title="项目目标"></a>项目目标</h2><blockquote>
+<ol>
+<li>解决线上问题，排查问题，找到具体代码</li>
+<li>分析 JVM</li>
+</ol>
+</blockquote>
+<h2 id="关键事项"><a href="#关键事项" class="headerlink" title="关键事项"></a>关键事项</h2><ul>
+<li>使用 Visualvm 分析</li>
+<li>下载 dump 文件，分析 dump 文件</li>
+<li>基础环境：Java1.8 版本，IDEA，</li>
+</ul>
+<h2 id="复现问题"><a href="#复现问题" class="headerlink" title="复现问题"></a>复现问题</h2><blockquote>
+<p>问题的主要就是对象在频繁的申请，频繁的放入，导致堆被撑爆</p>
+</blockquote>
+<ol>
+<li><strong>编写对应的代码，其实对应的就是频繁的放入 list，让 list 去无限的扩容，这时候如果是面试，就可以问 list 的扩容机制和 map 的扩容机制问题</strong></li>
+</ol>
+<div class="code-wrapper"><pre><code class="hljs java">  <span class="hljs-keyword">package</span> com.example.testjvm;
+
+<span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * 测试堆内存爆表</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@author</span> admin</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2023/03/07</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestController</span> &#123;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 集合对象</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> List&lt;TestJAVA&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 会报错的接口</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@GetMapping(&quot;/error&quot;)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">error</span><span class="hljs-params">()</span> &#123;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">900000000</span>; i++) &#123;
+            <span class="hljs-type">TestJAVA</span> <span class="hljs-variable">build</span> <span class="hljs-operator">=</span> TestJAVA.builder()
+                    .e(i)
+                    .f(i)
+                    .b(i)
+                    .g(i)
+                    .a(i).build();
+            list.add(build);
+        &#125;
+
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 正常的接口</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> String&#125;</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> IOException IOException</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@GetMapping(&quot;/normal&quot;)</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">normal</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;normal&quot;</span>;
+    &#125;
+&#125;
+</code></pre></div>
+
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.example.testjvm;
+
+<span class="hljs-keyword">import</span> lombok.Builder;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * 测试实体类</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@author</span> admin</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2023/03/07</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-meta">@Builder</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestJAVA</span> &#123;
+    Integer a=<span class="hljs-number">0</span>;
+    Integer b=<span class="hljs-number">0</span>;
+    Integer c=<span class="hljs-number">0</span>;
+    Integer d=<span class="hljs-number">0</span>;
+    Integer e=<span class="hljs-number">0</span>;
+    Integer f=<span class="hljs-number">0</span>;
+    Integer g=<span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">TestJAVA</span><span class="hljs-params">(Integer a, Integer b, Integer c, Integer d, Integer e, Integer f, Integer g)</span> &#123;
+        <span class="hljs-built_in">this</span>.a = a;
+        <span class="hljs-built_in">this</span>.b = b;
+        <span class="hljs-built_in">this</span>.c = c;
+        <span class="hljs-built_in">this</span>.d = d;
+        <span class="hljs-built_in">this</span>.e = e;
+        <span class="hljs-built_in">this</span>.f = f;
+        <span class="hljs-built_in">this</span>.g = g;
+    &#125;
+&#125;
+</code></pre></div>
+
+<ol start="2">
+<li><strong>开始模拟线上请求，在 IDEA 里面设置好对应的参数</strong></li>
+</ol>
+<div class="code-wrapper"><pre><code class="hljs java"># Xmx设置堆内存的最大 Heap 值
+# Xms设置堆内存的最小 Heap 值
+# +HeapDumpOnOutOfMemoryError可以让JVM在出现内存溢出时候Dump出当前的内存转储快照。快照格式为java_pid2821.hprof（<span class="hljs-number">2821</span>为Java进程号）
+
+-Xms200m -Xmx200m -XX:+HeapDumpOnOutOfMemoryError</code></pre></div>
+
+<p>记得设置好对应的 workdirectory 的工作目录<br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png" srcset="/img/loading.gif" lazyload></p>
+<ol start="3">
+<li><strong>IDEA 配置 VisualVM，安装对应的插件并配置</strong></li>
+</ol>
+<p>软件提供如下：<br><a target="_blank" rel="noopener" href="https://www.yuque.com/attachments/yuque/0/2023/zip/3009901/1678159735821-340d751a-0edd-4de5-8e13-a23c149c30a7.zip">visualvm_215.zip</a><br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FpSvS-GuvwQXCJzgQvSyNZKxmNgC.png" srcset="/img/loading.gif" lazyload></p>
+<ol start="4">
+<li><strong>用 visualVM 启动</strong></li>
+</ol>
+<p><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fi9XYL9kCWleDq2ckH7zn43ICbpX.png" srcset="/img/loading.gif" lazyload><br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fu36lWKUK60El8A11-bImj4RzCpa.png" srcset="/img/loading.gif" lazyload></p>
+<ol start="5">
+<li><strong>堆内存爆表</strong></li>
+</ol>
+<p><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FvShN2oc4ooKMb1-M4s3Z_pXcyzA.png" srcset="/img/loading.gif" lazyload></p>
+<ol start="6">
+<li><strong>查看 GC 的命令</strong></li>
+</ol>
+<div class="code-wrapper"><pre><code class="hljs java">sudo -u tomcat jps
+sudo -u tomcat jstat -gcutil <span class="hljs-number">3168</span> <span class="hljs-number">1000</span>  #每隔<span class="hljs-number">10</span>秒显示堆比例
+sudo -u tomcat jstat -gc <span class="hljs-number">3168</span> <span class="hljs-number">10000</span>  #每隔<span class="hljs-number">10</span>秒显示堆使用大小，单位KB
+jmap -dump:format=b,file=filename pid #线上直接在已经假死的程序上获得dump文件的命令</code></pre></div>
+
+<p>在刚刚设置的 work 工作目录中有已经爆表的 dump 文件了<br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FsNsdWX1vWpRXdzTTNZw8_oyt16B.png" srcset="/img/loading.gif" lazyload><br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FnwoLx4VsYW9F6Z-pXJ39F8zBhxc.png" srcset="/img/loading.gif" lazyload><br>数据直接给出了答案，这个对象，很大，这里出了问题<br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FloP7RXRrklZW9Hldw3eKx0qPlG2.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h2><ul>
+<li>Eden 区，一直在创建新的对象，一直在请求空间</li>
+<li>当 Eden 区达到百分百的时候，触发一次 YGC，然后进行垃圾回收，S0 和 S1 互换，存活的对象，会移动到老年 O 区</li>
+<li>当老年 O 区达到百分百的时候，触发一次 FULL GC，进行所有的垃圾回收</li>
+<li>所以主要原因是 Eden 区一直在产生对象，撑爆了设定的堆内存</li>
+</ul>
+<h2 id="JVM-一些参数说明"><a href="#JVM-一些参数说明" class="headerlink" title="JVM 一些参数说明"></a>JVM 一些参数说明</h2><ul>
+<li>S0C：第一个幸存区的大小，单位 kb</li>
+<li>S1C：第二个幸存区的大小，单位 kb</li>
+<li>S0U：第一个幸存区的使用大小，单位 kb</li>
+<li>S1U：第二个幸存区的使用大小，单位 kb</li>
+<li>EC：伊甸园区的大小，单位 kb</li>
+<li>EU：伊甸园区的使用大小，单位 kb</li>
+<li>OC：老年代大小，单位 kb</li>
+<li>OU：老年代使用大小，单位 kb</li>
+<li>MC：方法区大小，单位 kb</li>
+<li>MU：方法区使用大小，单位 kb</li>
+<li>CCSC:压缩类空间大小，单位 kb</li>
+<li>CCSU:压缩类空间使用大小，单位 kb</li>
+<li>YGC：年轻代垃圾回收次数，单位 s</li>
+<li>YGCT：年轻代垃圾回收消耗时间，单位 s</li>
+<li>FGC：老年代垃圾回收次数，单位 s</li>
+<li>FGCT：老年代垃圾回收消耗时间，单位 s</li>
+<li>GCT：垃圾回收消耗总时间，单位 s</li>
+</ul>
+<h2 id="内存溢出-out-of-memory"><a href="#内存溢出-out-of-memory" class="headerlink" title="内存溢出 out of memory"></a>内存溢出 out of memory</h2><p><em>是指程序在申请内存时，没有足够的内存空间供其使用，出现 out of memory；比如申请了一个 integer,但给它存了 long 才能存下的数，那就是内存溢出。</em><br><em>个盘子用尽各种方法只能装 4 个果子，你装了 5 个，结果掉倒地上不能吃了。这就是溢出！比方说栈，栈满时再做进栈必定产生空间溢出，叫上溢，栈空时再做退栈也产生空间溢出，称为下溢。就是分配的内存不足以放下数据项序列,称为内存溢出.</em></p>
+<h2 id="内存泄露-memory-leak"><a href="#内存泄露-memory-leak" class="headerlink" title="内存泄露 memory leak"></a>内存泄露 memory leak</h2><p><em>是指程序在申请内存后，无法释放已申请的内存空间，一次内存泄露危害可以忽略，但内存泄露堆积后果很严重，无论多少内存,迟早会被占光。</em><br><em>memory leak 会最终会导致 out of memory！</em></p>
+<h3 id="常见的内存泄露有："><a href="#常见的内存泄露有：" class="headerlink" title="常见的内存泄露有："></a>常见的内存泄露有：</h3><div class="code-wrapper"><pre><code class="hljs">  1. 文件流不关闭
+  2. 数据库连接没有关闭
+  3. 内存使用过多
+</code></pre></div>
+<h2 id="内存溢出的原因以及解决方法"><a href="#内存溢出的原因以及解决方法" class="headerlink" title="内存溢出的原因以及解决方法"></a>内存溢出的原因以及解决方法</h2><h3 id="原因列表："><a href="#原因列表：" class="headerlink" title="原因列表："></a>原因列表：</h3><ol>
+<li> 内存中加载的数据量过于庞大，如一次从数据库取出过多数据；</li>
+<li> 集合类中有对对象的引用，使用完后未清空，使得 JVM 不能回收；</li>
+<li> 代码中存在死循环或循环产生过多重复的对象实体；</li>
+<li> 使用的第三方软件中的 BUG；</li>
+<li> 启动参数内存值设定的过小</li>
+</ol>
+<h3 id="方案列表："><a href="#方案列表：" class="headerlink" title="方案列表："></a>方案列表：</h3><ol>
+<li> 第一，修改 JVM 启动参数，直接增加内存。(-Xms，-Xmx 参数一定不要忘记加。)</li>
+<li> 第二，检查错误日志，查看“OutOfMemory”错误前是否有其它异常或错误。</li>
+<li> 第三，对代码进行走查和分析，找出可能发生内存溢出的位置。</li>
+</ol>
+<h3 id="重点排查："><a href="#重点排查：" class="headerlink" title="重点排查："></a>重点排查：</h3><ol>
+<li> 检查对数据库查询中，是否有一次获得全部数据的查询。一般来说，如果一次取十万条记录到内存，就可能引起内存溢出。这个问题比较隐蔽，在上线前，数据库中数据较少，不容易出问题，上线后，数据库中数据多了，一次查询就有可能引起内存溢出。因此对于数据库查询尽量采用分页的方式查询。</li>
+<li> 检查代码中是否有死循环或递归调用。</li>
+<li> 检查是否有大循环重复产生新对象实体。</li>
+<li> 检查对数据库查询中，是否有一次获得全部数据的查询。一般来说，如果一次取十万条记录到内存，就可能引起内存溢出。这个问题比较隐蔽，在上线前，数据库中数据较少，不容易出问题，上线后，数据库中数据多了，一次查询就有可能引起内存溢出。因此对于数据库查询尽量采用分页的方式查询。</li>
+<li> 检查 List、MAP 等集合对象是否有使用完后，未清除的问题。List、MAP 等集合对象会始终存有对对象的引用，使得这些对象不能被 GC 回收。</li>
+<li> 使用内存查看工具动态查看内存使用情况</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>FullGC</div>
+      <div>http://example.com/2023/03/07/ri0y3cgry9p5u9et/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>杨靖成</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/03/qleyofzi4m3x6y6n/" title="中间件——日志平台">
+                        <span class="hidden-mobile">中间件——日志平台</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      黑ICP备2022001348号-1
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=2022001348"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>黑ICP备2022001348号-1</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
