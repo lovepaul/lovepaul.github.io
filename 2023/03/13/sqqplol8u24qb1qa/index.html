@@ -16,26 +16,26 @@
   <meta name="author" content="杨靖成">
   <meta name="keywords" content="">
   
-    <meta name="description" content="项目背景 当前每次都要上百度，阿里找对应的命令   换了新的机器就要找一次  项目目标 一键解决安装 Docker 的问题  命令持久可用 全自动   关键事项 Linux 的机器不可以是 ARM 架构的   注意 Linux 的机器的基础架构 注意 Linux 的网络速度  具体脚本 下面是两种方式，具体看个人习惯  1、脚本的具体内容可以自己复制出来新建文件 # step 1: 安装必要的一些">
+    <meta name="description" content="1、生成 GUIDhttps:&#x2F;&#x2F;www.guidgen.com&#x2F; 2、拼接地址http:&#x2F;&#x2F;127.0.0.1:8888&#x2F;%7BGUID%7D 3、下载 winy 运行的插件并运行https:&#x2F;&#x2F;github.com&#x2F;ilanyu&#x2F;ReverseProxy&#x2F;releases&#x2F;tag&#x2F;v1.4 4、在 setting 那里找到激活的位置">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker&amp;Compose——安装">
-<meta property="og:url" content="http://example.com/2023/03/03/uq7l3qt11popnbhl/index.html">
+<meta property="og:title" content="激活JRebel">
+<meta property="og:url" content="http://example.com/2023/03/13/sqqplol8u24qb1qa/index.html">
 <meta property="og:site_name" content="lensman&#39;s writing time">
-<meta property="og:description" content="项目背景 当前每次都要上百度，阿里找对应的命令   换了新的机器就要找一次  项目目标 一键解决安装 Docker 的问题  命令持久可用 全自动   关键事项 Linux 的机器不可以是 ARM 架构的   注意 Linux 的机器的基础架构 注意 Linux 的网络速度  具体脚本 下面是两种方式，具体看个人习惯  1、脚本的具体内容可以自己复制出来新建文件 # step 1: 安装必要的一些">
+<meta property="og:description" content="1、生成 GUIDhttps:&#x2F;&#x2F;www.guidgen.com&#x2F; 2、拼接地址http:&#x2F;&#x2F;127.0.0.1:8888&#x2F;%7BGUID%7D 3、下载 winy 运行的插件并运行https:&#x2F;&#x2F;github.com&#x2F;ilanyu&#x2F;ReverseProxy&#x2F;releases&#x2F;tag&#x2F;v1.4 4、在 setting 那里找到激活的位置">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677819559251-0b9221b0-28b9-4438-8fd5-49005338e8a7.png#averageHue=%232d4f65&clientId=u31d9908f-2690-4&from=paste&height=136&id=u87f21174&name=image.png&originHeight=174&originWidth=762&originalType=binary%E2%88%B6=1&rotation=0&showTitle=true&size=165311&status=done&style=shadow&taskId=u407e2e96-f5af-4ab4-a7a2-a73513d747f&title=%E5%85%B7%E4%BD%93%E5%9C%A8shell%E8%BD%AF%E4%BB%B6%E9%87%8C%E7%9A%84%E6%93%8D%E4%BD%9C&width=596">
-<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FoJvzsezXvQv3VTmfuVYbiUP4V8u.png">
-<meta property="article:published_time" content="2023-03-03T04:16:10.000Z">
-<meta property="article:modified_time" content="2023-03-15T02:25:36.180Z">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fk4-Zw1zhYK8JhlViW6zCVkVj19T.png">
+<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FgfGLXVKIQxMA85GVnUUh-QJndsR.png">
+<meta property="article:published_time" content="2023-03-13T07:15:05.000Z">
+<meta property="article:modified_time" content="2023-03-15T02:25:36.187Z">
 <meta property="article:author" content="杨靖成">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677819559251-0b9221b0-28b9-4438-8fd5-49005338e8a7.png#averageHue=%232d4f65&clientId=u31d9908f-2690-4&from=paste&height=136&id=u87f21174&name=image.png&originHeight=174&originWidth=762&originalType=binary%E2%88%B6=1&rotation=0&showTitle=true&size=165311&status=done&style=shadow&taskId=u407e2e96-f5af-4ab4-a7a2-a73513d747f&title=%E5%85%B7%E4%BD%93%E5%9C%A8shell%E8%BD%AF%E4%BB%B6%E9%87%8C%E7%9A%84%E6%93%8D%E4%BD%9C&width=596">
+<meta name="twitter:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fk4-Zw1zhYK8JhlViW6zCVkVj19T.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Docker&amp;Compose——安装 - lensman&#39;s writing time</title>
+  <title>激活JRebel - lensman&#39;s writing time</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Docker&Compose——安装</span>
+            <span id="subtitle">激活JRebel</span>
           
         </div>
 
@@ -207,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-03-03 12:16" pubdate>
-          2023年3月3日 中午
+        <time datetime="2023-03-13 15:15" pubdate>
+          2023年3月13日 下午
         </time>
       </span>
     
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          710 字
+          161 字
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          6 分钟
+          2 分钟
         
       </span>
     
@@ -276,63 +276,15 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Docker&amp;Compose——安装</h1>
+            <h1 style="display: none">激活JRebel</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><blockquote>
-<p>当前每次都要上百度，阿里找对应的命令</p>
-</blockquote>
-<ul>
-<li>换了新的机器就要找一次</li>
-</ul>
-<h2 id="项目目标"><a href="#项目目标" class="headerlink" title="项目目标"></a>项目目标</h2><blockquote>
-<p>一键解决安装 Docker 的问题</p>
-<ol>
-<li>命令持久可用</li>
-<li>全自动</li>
-</ol>
-</blockquote>
-<h2 id="关键事项"><a href="#关键事项" class="headerlink" title="关键事项"></a>关键事项</h2><blockquote>
-<p>Linux 的机器不可以是 ARM 架构的</p>
-</blockquote>
-<ul>
-<li>注意 Linux 的机器的基础架构</li>
-<li>注意 Linux 的网络速度</li>
-</ul>
-<h2 id="具体脚本"><a href="#具体脚本" class="headerlink" title="具体脚本"></a>具体脚本</h2><blockquote>
-<p>下面是两种方式，具体看个人习惯</p>
-</blockquote>
-<p>1、脚本的具体内容可以自己复制出来新建文件</p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">step 1: 安装必要的一些系统工具</span>
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-<span class="hljs-meta prompt_"># </span><span class="language-bash">Step 2: 添加软件源信息</span>
-sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-<span class="hljs-meta prompt_"># </span><span class="language-bash">Step 3: 更新并安装 Docker-CE</span>
-sudo yum makecache fast
-sudo yum -y install docker-ce
-<span class="hljs-meta prompt_"># </span><span class="language-bash">Step 4: 开启Docker服务</span>
-sudo service docker start
-
-curl -L https://get.daocloud.io/docker/compose/releases/download/v2.2.2/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose</code></pre></div>
-
-<p>2、脚本文件可直接下载使用<br><a target="_blank" rel="noopener" href="https://www.yuque.com/attachments/yuque/0/2023/sh/3009901/1677819222963-3b77a451-0c55-4a77-a4b9-19594c29ff66.sh">add-docker-and-compose.sh</a></p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ol>
-<li>上传脚本</li>
-<li>赋权脚本</li>
-</ol>
-<div class="code-wrapper"><pre><code class="hljs shell">chmod -R 777 脚本.sh</code></pre></div>
-
-<ol start="3">
-<li>运行脚本</li>
-</ol>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677819559251-0b9221b0-28b9-4438-8fd5-49005338e8a7.png#averageHue=%232d4f65&clientId=u31d9908f-2690-4&from=paste&height=136&id=u87f21174&name=image.png&originHeight=174&originWidth=762&originalType=binary%E2%88%B6=1&rotation=0&showTitle=true&size=165311&status=done&style=shadow&taskId=u407e2e96-f5af-4ab4-a7a2-a73513d747f&title=%E5%85%B7%E4%BD%93%E5%9C%A8shell%E8%BD%AF%E4%BB%B6%E9%87%8C%E7%9A%84%E6%93%8D%E4%BD%9C&width=596" srcset="/img/loading.gif" lazyload alt="image.png" title="具体在shell软件里的操作"></p>
-<h2 id="检验结果"><a href="#检验结果" class="headerlink" title="检验结果"></a>检验结果</h2><div class="code-wrapper"><pre><code class="hljs shell">docker -v
-docker-compose -v</code></pre></div>
-
-<p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FoJvzsezXvQv3VTmfuVYbiUP4V8u.png" srcset="/img/loading.gif" lazyload></p>
+                <h2 id="1、生成-GUID"><a href="#1、生成-GUID" class="headerlink" title="1、生成 GUID"></a>1、生成 GUID</h2><p><a target="_blank" rel="noopener" href="https://www.guidgen.com/">https://www.guidgen.com/</a></p>
+<h2 id="2、拼接地址"><a href="#2、拼接地址" class="headerlink" title="2、拼接地址"></a>2、拼接地址</h2><p><a target="_blank" rel="noopener" href="http://127.0.0.1:8888/%7BGUID%7D">http://127.0.0.1:8888/%7BGUID%7D</a></p>
+<h2 id="3、下载-winy-运行的插件并运行"><a href="#3、下载-winy-运行的插件并运行" class="headerlink" title="3、下载 winy 运行的插件并运行"></a>3、下载 winy 运行的插件并运行</h2><p><a target="_blank" rel="noopener" href="https://github.com/ilanyu/ReverseProxy/releases/tag/v1.4">https://github.com/ilanyu/ReverseProxy/releases/tag/v1.4</a><br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fk4-Zw1zhYK8JhlViW6zCVkVj19T.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="4、在-setting-那里找到激活的位置"><a href="#4、在-setting-那里找到激活的位置" class="headerlink" title="4、在 setting 那里找到激活的位置"></a>4、在 setting 那里找到激活的位置</h2><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FgfGLXVKIQxMA85GVnUUh-QJndsR.png" srcset="/img/loading.gif" lazyload></p>
 
                 
               </div>
@@ -350,8 +302,8 @@ docker-compose -v</code></pre></div>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker&amp;Compose——安装</div>
-      <div>http://example.com/2023/03/03/uq7l3qt11popnbhl/</div>
+      <div>激活JRebel</div>
+      <div>http://example.com/2023/03/13/sqqplol8u24qb1qa/</div>
     </div>
     <div class="license-meta">
       
@@ -363,7 +315,7 @@ docker-compose -v</code></pre></div>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年3月3日</div>
+          <div>2023年3月13日</div>
         </div>
       
       
@@ -395,15 +347,21 @@ docker-compose -v</code></pre></div>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/03/03/ada1oluaseecquo4/" title="Docker基础命令">
+                      <a href="/2023/03/14/hdqzkbp1ywg1gt1w/" title="cola-statemachine实践">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Docker基础命令</span>
+                        <span class="hidden-mobile">cola-statemachine实践</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2023/03/07/oxao8qyeporktgyl/" title="规则引擎Drools">
+                        <span class="hidden-mobile">规则引擎Drools</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

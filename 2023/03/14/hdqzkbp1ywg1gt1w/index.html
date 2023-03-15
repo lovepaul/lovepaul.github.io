@@ -1,0 +1,988 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/good.png">
+  <link rel="icon" href="/img/good.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="杨靖成">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景在上一家公司，订单的状态有很多，都是在需求日益增加的条件下，衍生出来的，待支付，待发货，已发货，用户取消，后台取消，批处理取消，上级审核取消等这些业务其实是破坏了订单状态的初始的设计的，并且在日后的维护中，很难达到一个统一的状态，不知道在哪里就触碰了业务的红线，所以，本着简单就是高效的方式，我这收拢公司这些业务的时候，用到了状态机模式，这里就是标题所示的，cola-statemachine 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cola-statemachine实践">
+<meta property="og:url" content="http://example.com/2023/03/14/hdqzkbp1ywg1gt1w/index.html">
+<meta property="og:site_name" content="lensman&#39;s writing time">
+<meta property="og:description" content="背景在上一家公司，订单的状态有很多，都是在需求日益增加的条件下，衍生出来的，待支付，待发货，已发货，用户取消，后台取消，批处理取消，上级审核取消等这些业务其实是破坏了订单状态的初始的设计的，并且在日后的维护中，很难达到一个统一的状态，不知道在哪里就触碰了业务的红线，所以，本着简单就是高效的方式，我这收拢公司这些业务的时候，用到了状态机模式，这里就是标题所示的，cola-statemachine 的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fn9Xcm0vAHyOeQypiyFRF4UVYbt_.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/3009901/1678780200927-1517c693-2a51-4a33-a833-09575563917f.jpeg">
+<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fh41p6yGYVg-LWXm9yZNVqtqM2kZ.jpeg">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678794572540-995244a1-2782-4a64-8e54-6f4b607ea399.png#averageHue=%23927c56&clientId=uf6a7128e-a261-4&from=paste&height=1095&id=ub3a670dc&name=image.png&originHeight=1095&originWidth=2031&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=261989&status=done&style=none&taskId=u6d42bd1c-ec3e-49cf-9c8d-f2f7967a937&title=&width=2031">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Ft5KCPEUFL3_P9iCmLT_IGY_mYMs.png">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FrokC25X4TVduwrrIAMh4ojX34z0.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678794654183-37d8e305-ecc7-4f67-a74d-1109231e3b66.png#averageHue=%237d7f60&clientId=uf6a7128e-a261-4&from=paste&height=821&id=u3e02ee8b&name=image.png&originHeight=1095&originWidth=2031&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=284028&status=done&style=none&taskId=ua1d35112-90c5-4cb0-b6bc-be4fefc9c7f&title=&width=1523">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678795005055-807d7084-fdca-4c57-9dbc-ffbe255bb8d5.png#averageHue=%234f654f&clientId=uf6a7128e-a261-4&from=paste&height=821&id=u51531aa8&name=image.png&originHeight=1095&originWidth=2031&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=217400&status=done&style=none&taskId=uf596eae9-e5be-4cac-9f98-d187ecbeaf9&title=&width=1523">
+<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FiHWZVKPxXmFp6r-vV0UsO21WjSw.png">
+<meta property="article:published_time" content="2023-03-14T07:36:09.000Z">
+<meta property="article:modified_time" content="2023-03-15T02:25:36.263Z">
+<meta property="article:author" content="杨靖成">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fn9Xcm0vAHyOeQypiyFRF4UVYbt_.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>cola-statemachine实践 - lensman&#39;s writing time</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_788497_63oerieondh.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lensman&#39;s Writing Time</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/background.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">cola-statemachine实践</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-14 15:36" pubdate>
+          2023年3月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">cola-statemachine实践</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在上一家公司，订单的状态有很多，都是在需求日益增加的条件下，衍生出来的，待支付，待发货，已发货，用户取消，后台取消，批处理取消，上级审核取消等<br>这些业务其实是破坏了订单状态的初始的设计的，并且在日后的维护中，很难达到一个统一的状态，不知道在哪里就触碰了业务的红线，所以，本着简单就是高效<br>的方式，我这收拢公司这些业务的时候，用到了状态机模式，这里就是标题所示的，cola-statemachine 的实践</p>
+<h2 id="梳理业务"><a href="#梳理业务" class="headerlink" title="梳理业务"></a>梳理业务</h2><h3 id="首先把公司的订单业务梳理了一下，关于状态变更的几个特殊的点"><a href="#首先把公司的订单业务梳理了一下，关于状态变更的几个特殊的点" class="headerlink" title="首先把公司的订单业务梳理了一下，关于状态变更的几个特殊的点"></a>首先把公司的订单业务梳理了一下，关于状态变更的几个特殊的点</h3><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fn9Xcm0vAHyOeQypiyFRF4UVYbt_.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="关闭订单的简单流程图"><a href="#关闭订单的简单流程图" class="headerlink" title="关闭订单的简单流程图"></a>关闭订单的简单流程图</h3><p><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/3009901/1678780200927-1517c693-2a51-4a33-a833-09575563917f.jpeg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="关闭订单简单的状态流转图"><a href="#关闭订单简单的状态流转图" class="headerlink" title="关闭订单简单的状态流转图"></a>关闭订单简单的状态流转图</h3><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fh41p6yGYVg-LWXm9yZNVqtqM2kZ.jpeg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h2><h3 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h3><div class="code-wrapper"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/com.alibaba.cola/cola-component-statemachine --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cola<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>cola-component-statemachine<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.3.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+
+<h3 id="定义一个订单的实体类"><a href="#定义一个订单的实体类" class="headerlink" title="定义一个订单的实体类"></a>定义一个订单的实体类</h3><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.study.studycolastatemachine.entity;
+
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderStatusEnum;
+<span class="hljs-keyword">import</span> lombok.Builder;
+<span class="hljs-keyword">import</span> lombok.Data;
+
+<span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@Builder</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Order</span> &#123;
+
+    <span class="hljs-keyword">public</span> OrderStatusEnum orderStatusEnum;
+    <span class="hljs-keyword">public</span> Integer orderId;
+    <span class="hljs-keyword">public</span> String orderName;
+
+&#125;
+</code></pre></div>
+
+<h3 id="定义订单的状态的枚举值"><a href="#定义订单的状态的枚举值" class="headerlink" title="定义订单的状态的枚举值"></a>定义订单的状态的枚举值</h3><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.study.studycolastatemachine.enums;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">OrderStatusEnum</span> &#123;
+    INIT(<span class="hljs-string">&quot;0&quot;</span>, <span class="hljs-string">&quot;待付款&quot;</span>),
+    WAITING_FOR_DELIVERY(<span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-string">&quot;待发货&quot;</span>),
+    HAVE_BEEN_DELIVERY(<span class="hljs-string">&quot;2&quot;</span>, <span class="hljs-string">&quot;已发货&quot;</span>),
+    CLOSE(<span class="hljs-string">&quot;3&quot;</span>, <span class="hljs-string">&quot;已取消&quot;</span>);
+
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String code;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String info;
+
+    OrderStatusEnum(String code, String info)
+    &#123;
+        <span class="hljs-built_in">this</span>.code = code;
+        <span class="hljs-built_in">this</span>.info = info;
+    &#125;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getCode</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> code;
+    &#125;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getInfo</span><span class="hljs-params">()</span>
+    &#123;
+        <span class="hljs-keyword">return</span> info;
+    &#125;
+&#125;
+</code></pre></div>
+
+<h3 id="定义订单事件的枚举值"><a href="#定义订单事件的枚举值" class="headerlink" title="定义订单事件的枚举值"></a>定义订单事件的枚举值</h3><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.study.studycolastatemachine.enums;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * 订单事件</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@author</span> admin</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2023/03/14</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">OrderEvent</span> &#123;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 用户关闭</span>
+<span class="hljs-comment">     */</span>
+    USER_CLOSE(<span class="hljs-string">&quot;0&quot;</span>, <span class="hljs-string">&quot;用户取消&quot;</span>),
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 管理员关闭</span>
+<span class="hljs-comment">     */</span>
+    ADMIN_CLOSE(<span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-string">&quot;后台取消&quot;</span>),
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 超时关闭</span>
+<span class="hljs-comment">     */</span>
+    OVERTIME_CLOSE(<span class="hljs-string">&quot;2&quot;</span>, <span class="hljs-string">&quot;超时取消&quot;</span>),
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 检查错误关闭</span>
+<span class="hljs-comment">     */</span>
+    CHECK_ERROR_CLOSE(<span class="hljs-string">&quot;3&quot;</span>, <span class="hljs-string">&quot;上级审核取消&quot;</span>),
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 用户付费</span>
+<span class="hljs-comment">     */</span>
+    USER_PAY(<span class="hljs-string">&quot;4&quot;</span>, <span class="hljs-string">&quot;用户支付&quot;</span>);
+
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 密码</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String code;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 信息</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String info;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 订单事件</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> code 密码</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> info 信息</span>
+<span class="hljs-comment">     */</span>
+    OrderEvent(String code, String info) &#123;
+        <span class="hljs-built_in">this</span>.code = code;
+        <span class="hljs-built_in">this</span>.info = info;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 获取代码</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> String&#125;</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getCode</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> code;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 获取信息</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> String&#125;</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getInfo</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> info;
+    &#125;
+&#125;
+</code></pre></div>
+
+<h3 id="在容器启动的时候注册一个订单状态变更的工厂"><a href="#在容器启动的时候注册一个订单状态变更的工厂" class="headerlink" title="在容器启动的时候注册一个订单状态变更的工厂"></a>在容器启动的时候注册一个订单状态变更的工厂</h3><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.study.studycolastatemachine.config;
+
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.Action;
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.Condition;
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.StateMachine;
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.builder.StateMachineBuilder;
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.builder.StateMachineBuilderFactory;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.action.UserCloseAction;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderEvent;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderStatusEnum;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.entity.Order;
+<span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+<span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;
+<span class="hljs-keyword">import</span> org.springframework.stereotype.Component;
+
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StateMachineBuilderConfig</span> &#123;
+    <span class="hljs-meta">@Autowired</span>
+    UserCloseAction userCloseAction;
+
+    <span class="hljs-meta">@Bean(&quot;orderOperaMachine&quot;)</span>
+    <span class="hljs-keyword">public</span> StateMachine <span class="hljs-title function_">orderOperaMachine</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-type">String</span> <span class="hljs-variable">ORDER_OPERA</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;order_opera&quot;</span>;
+        StateMachineBuilder&lt;OrderStatusEnum, OrderEvent, Order&gt; builder = StateMachineBuilderFactory.create();
+        <span class="hljs-comment">//订单从初始化状态-待发货-状态-转到-关闭订单状态--用户关闭</span>
+        builder.externalTransitions()
+                .fromAmong(OrderStatusEnum.INIT, OrderStatusEnum.WAITING_FOR_DELIVERY)
+                .to(OrderStatusEnum.CLOSE)
+                .on(OrderEvent.USER_CLOSE)
+                .when(checkCondition())
+                .perform(userCloseAction);
+        <span class="hljs-comment">//订单从-初始化状态-已发货-待发货--转到-关闭订单状态--后台操作人员关闭</span>
+        builder.externalTransitions()
+                .fromAmong(OrderStatusEnum.INIT, OrderStatusEnum.HAVE_BEEN_DELIVERY, OrderStatusEnum.WAITING_FOR_DELIVERY)
+                .to(OrderStatusEnum.CLOSE)
+                .on(OrderEvent.ADMIN_CLOSE)
+                .when(checkCondition())
+                .perform(doAction());
+        <span class="hljs-comment">//订单从等待发货状态-转为-订单关闭状态-超时关闭</span>
+        builder.externalTransition()
+                .from(OrderStatusEnum.WAITING_FOR_DELIVERY)
+                .to(OrderStatusEnum.CLOSE)
+                .on(OrderEvent.OVERTIME_CLOSE)
+                .when(checkCondition())
+                .perform(doAction());
+        <span class="hljs-comment">//订单从待发货状态--转为-订单关闭状态-上级审批不通过关闭</span>
+        builder.externalTransition()
+                .from(OrderStatusEnum.WAITING_FOR_DELIVERY)
+                .to(OrderStatusEnum.CLOSE)
+                .on(OrderEvent.CHECK_ERROR_CLOSE)
+                .when(checkCondition())
+                .perform(doAction());
+        <span class="hljs-comment">//订单从初始化状态--转为待发货状态--用户支付完毕动</span>
+        builder.externalTransition()
+                .from(OrderStatusEnum.INIT)
+                .to(OrderStatusEnum.WAITING_FOR_DELIVERY)
+                .on(OrderEvent.USER_PAY)
+                .when(checkCondition())
+                .perform(doAction());
+
+        <span class="hljs-type">StateMachine</span> <span class="hljs-variable">orderOperaMachine</span> <span class="hljs-operator">=</span> builder.build(ORDER_OPERA);
+
+        <span class="hljs-comment">//打印uml图</span>
+        <span class="hljs-type">String</span> <span class="hljs-variable">plantUML</span> <span class="hljs-operator">=</span> orderOperaMachine.generatePlantUML();
+        System.out.println(plantUML);
+        <span class="hljs-keyword">return</span> orderOperaMachine;
+    &#125;
+
+    <span class="hljs-keyword">private</span> Condition&lt;Order&gt; <span class="hljs-title function_">checkCondition</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> (ctx) -&gt; &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        &#125;;
+    &#125;
+
+    <span class="hljs-keyword">private</span> Action&lt;OrderStatusEnum, OrderEvent, Order&gt; <span class="hljs-title function_">doAction</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-keyword">return</span> (from, to, event, ctx) -&gt; &#123;
+            System.out.println(ctx.getOrderName() + <span class="hljs-string">&quot; is operating &quot;</span> + ctx.getOrderId() + <span class="hljs-string">&quot; from:&quot;</span> + from + <span class="hljs-string">&quot; to:&quot;</span> + to + <span class="hljs-string">&quot; on:&quot;</span> + event);
+        &#125;;
+    &#125;
+
+&#125;
+</code></pre></div>
+
+<h3 id="在定义一个特殊的，只是举个例子，可以通过集成的方式集成实现一个用户关单的具体操作"><a href="#在定义一个特殊的，只是举个例子，可以通过集成的方式集成实现一个用户关单的具体操作" class="headerlink" title="在定义一个特殊的，只是举个例子，可以通过集成的方式集成实现一个用户关单的具体操作"></a>在定义一个特殊的，只是举个例子，可以通过集成的方式集成实现一个用户关单的具体操作</h3><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.study.studycolastatemachine.action;
+
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.Action;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderEvent;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderStatusEnum;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.entity.Order;
+<span class="hljs-keyword">import</span> org.springframework.stereotype.Component;
+
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserCloseAction</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Action</span>&lt;OrderStatusEnum, OrderEvent, Order&gt; &#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">(OrderStatusEnum from, OrderStatusEnum to, OrderEvent event, Order context)</span> &#123;
+        System.out.println(<span class="hljs-string">&quot;用户关闭流程开始走了&quot;</span>);
+        System.out.println(<span class="hljs-string">&quot;从这个状态-【&quot;</span> + from.getInfo() + <span class="hljs-string">&quot;】-转为+【&quot;</span> + to.getInfo() + <span class="hljs-string">&quot;】 的状态&quot;</span>);
+        System.out.println(<span class="hljs-string">&quot;上下文信息：&quot;</span> + context.toString());
+        System.out.println(<span class="hljs-string">&quot;中间执行的一些操作.......&quot;</span>);
+        System.out.println(<span class="hljs-string">&quot;用户关闭流程完毕了&quot;</span>);
+    &#125;
+&#125;
+</code></pre></div>
+
+<h3 id="定义一个-controller-的操作接口"><a href="#定义一个-controller-的操作接口" class="headerlink" title="定义一个 controller 的操作接口"></a>定义一个 controller 的操作接口</h3><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.study.studycolastatemachine.controller;
+
+<span class="hljs-keyword">import</span> com.alibaba.cola.statemachine.StateMachine;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderEvent;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.enums.OrderStatusEnum;
+<span class="hljs-keyword">import</span> com.study.studycolastatemachine.entity.Order;
+<span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+<span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Qualifier;
+<span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;
+<span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * 订单操作集合</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@author</span> admin</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2023/03/14</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderOperaController</span> &#123;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-meta">@Qualifier(&quot;orderOperaMachine&quot;)</span>
+    StateMachine&lt;OrderStatusEnum, OrderEvent, Order&gt; orderOperaMachine;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 场景1-用户关闭订单</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> Boolean&#125;</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RequestMapping(&quot;userclose&quot;)</span>
+    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">userCloseOrder</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-comment">//把订单状态改为关闭</span>
+        <span class="hljs-type">String</span> <span class="hljs-variable">machineId</span> <span class="hljs-operator">=</span> orderOperaMachine.getMachineId();
+        System.out.println(machineId);
+        <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> Order.builder().orderId(<span class="hljs-number">1</span>).orderName(<span class="hljs-string">&quot;用户&quot;</span>).orderStatusEnum(OrderStatusEnum.INIT).build();
+        <span class="hljs-type">OrderStatusEnum</span> <span class="hljs-variable">orderStatusEnum</span> <span class="hljs-operator">=</span> orderOperaMachine.fireEvent(OrderStatusEnum.INIT,OrderEvent.USER_CLOSE, order);
+        System.out.println(orderStatusEnum.toString());
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 场景2-管理员关闭订单</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> Boolean&#125;</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RequestMapping(&quot;adminClose&quot;)</span>
+    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">adminCloseOrder</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-comment">//把订单状态改为关闭</span>
+        <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> Order.builder().orderId(<span class="hljs-number">1</span>).orderName(<span class="hljs-string">&quot;后台操作人员&quot;</span>).orderStatusEnum(OrderStatusEnum.HAVE_BEEN_DELIVERY).build();
+        <span class="hljs-type">OrderStatusEnum</span> <span class="hljs-variable">orderStatusEnum</span> <span class="hljs-operator">=</span> orderOperaMachine.fireEvent(OrderStatusEnum.CLOSE, OrderEvent.ADMIN_CLOSE, order);
+        System.out.println(orderStatusEnum.toString());
+
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 场景3-超时关闭订单</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> Boolean&#125;</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RequestMapping(&quot;overTimeclose&quot;)</span>
+    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">overTimeCloseOrder</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-comment">//把订单状态改为关闭</span>
+        <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> Order.builder().orderId(<span class="hljs-number">1</span>).orderName(<span class="hljs-string">&quot;超时了关闭订单&quot;</span>)
+                .orderStatusEnum(OrderStatusEnum.WAITING_FOR_DELIVERY).build();
+        <span class="hljs-type">OrderStatusEnum</span> <span class="hljs-variable">orderStatusEnum</span> <span class="hljs-operator">=</span> orderOperaMachine.fireEvent(OrderStatusEnum.CLOSE, OrderEvent.OVERTIME_CLOSE, order);
+        System.out.println(orderStatusEnum.toString());
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 场景4-检查错误关闭订单</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@link</span> Boolean&#125;</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@RequestMapping(&quot;checkErrorClose&quot;)</span>
+    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">checkErrorCloseOrder</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-comment">//把订单状态改为关闭</span>
+        <span class="hljs-type">Order</span> <span class="hljs-variable">order</span> <span class="hljs-operator">=</span> Order.builder().orderId(<span class="hljs-number">1</span>).orderName(<span class="hljs-string">&quot;上级检查错误&quot;</span>).orderStatusEnum(OrderStatusEnum.WAITING_FOR_DELIVERY).build();
+        <span class="hljs-type">OrderStatusEnum</span> <span class="hljs-variable">orderStatusEnum</span> <span class="hljs-operator">=</span> orderOperaMachine.fireEvent(OrderStatusEnum.CLOSE, OrderEvent.CHECK_ERROR_CLOSE, order);
+        System.out.println(orderStatusEnum.toString());
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+&#125;
+</code></pre></div>
+
+<h3 id="最后，启动程序"><a href="#最后，启动程序" class="headerlink" title="最后，启动程序"></a>最后，启动程序</h3><p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678794572540-995244a1-2782-4a64-8e54-6f4b607ea399.png#averageHue=%23927c56&clientId=uf6a7128e-a261-4&from=paste&height=1095&id=ub3a670dc&name=image.png&originHeight=1095&originWidth=2031&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=261989&status=done&style=none&taskId=u6d42bd1c-ec3e-49cf-9c8d-f2f7967a937&title=&width=2031" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="安装-uml-的插件"><a href="#安装-uml-的插件" class="headerlink" title="安装 uml 的插件"></a>安装 uml 的插件</h3><p><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Ft5KCPEUFL3_P9iCmLT_IGY_mYMs.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a>创建文件</h3><p><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FrokC25X4TVduwrrIAMh4ojX34z0.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="把刚刚的代码粘贴进去"><a href="#把刚刚的代码粘贴进去" class="headerlink" title="把刚刚的代码粘贴进去"></a>把刚刚的代码粘贴进去</h3><p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678794654183-37d8e305-ecc7-4f67-a74d-1109231e3b66.png#averageHue=%237d7f60&clientId=uf6a7128e-a261-4&from=paste&height=821&id=u3e02ee8b&name=image.png&originHeight=1095&originWidth=2031&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=284028&status=done&style=none&taskId=ua1d35112-90c5-4cb0-b6bc-be4fefc9c7f&title=&width=1523" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="其实可以进行替换"><a href="#其实可以进行替换" class="headerlink" title="其实可以进行替换"></a>其实可以进行替换</h3><p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678795005055-807d7084-fdca-4c57-9dbc-ffbe255bb8d5.png#averageHue=%234f654f&clientId=uf6a7128e-a261-4&from=paste&height=821&id=u51531aa8&name=image.png&originHeight=1095&originWidth=2031&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=217400&status=done&style=none&taskId=uf596eae9-e5be-4cac-9f98-d187ecbeaf9&title=&width=1523" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="最后通过接口测试跑一下"><a href="#最后通过接口测试跑一下" class="headerlink" title="最后通过接口测试跑一下"></a>最后通过接口测试跑一下</h3><p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FiHWZVKPxXmFp6r-vV0UsO21WjSw.png" srcset="/img/loading.gif" lazyload><br>符合预期，后面的的几个业务线也是可以跑起来的<br>参考代码<a target="_blank" rel="noopener" href="https://www.yuque.com/attachments/yuque/0/2023/zip/3009901/1678795192639-626f1be9-5820-4477-80d0-08bc183dd75c.zip?_lake_card=%7B%22src%22:%22https://www.yuque.com/attachments/yuque/0/2023/zip/3009901/1678795192639-626f1be9-5820-4477-80d0-08bc183dd75c.zip%22,%22name%22:%22study-cola-statemachine.zip%22,%22size%22:123824,%22ext%22:%22zip%22,%22source%22:%22%22,%22status%22:%22done%22,%22download%22:true,%22taskId%22:%22uac450346-44c0-4ea7-957c-0e986d6c639%22,%22taskType%22:%22upload%22,%22type%22:%22application/x-zip-compressed%22,%22__spacing%22:%22both%22,%22id%22:%22u508e7de2%22,%22margin%22:%7B%22top%22:true,%22bottom%22:true%7D,%22card%22:%22file%22%7D">study-cola-statemachine.zip</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>cola-statemachine实践</div>
+      <div>http://example.com/2023/03/14/hdqzkbp1ywg1gt1w/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>杨靖成</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/13/sqqplol8u24qb1qa/" title="激活JRebel">
+                        <span class="hidden-mobile">激活JRebel</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      黑ICP备2022001348号-1
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=2022001348"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>黑ICP备2022001348号-1</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

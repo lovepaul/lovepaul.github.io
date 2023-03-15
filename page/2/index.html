@@ -18,7 +18,7 @@
   
     <meta property="og:type" content="website">
 <meta property="og:title" content="lensman&#39;s writing time">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="lensman&#39;s writing time">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="杨靖成">
@@ -221,15 +221,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/03/14/hdqzkbp1ywg1gt1w/" target="_self">
-          cola-statemachine实践
+        <a href="/2023/03/03/uq7l3qt11popnbhl/" target="_self">
+          Docker&amp;Compose——安装
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/14/hdqzkbp1ywg1gt1w/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/uq7l3qt11popnbhl/" target="_self">
         <div>
-          背景在上一家公司，订单的状态有很多，都是在需求日益增加的条件下，衍生出来的，待支付，待发货，已发货，用户取消，后台取消，批处理取消，上级审核取消等这些业务其实是破坏了订单状态的初始的设计的，并且在日后的维护中，很难达到一个统一的状态，不知道在哪里就触碰了业务的红线，所以，本着简单就是高效的方式，我这收拢公司这些业务的时候，用到了状态机模式，这里就是标题所示的，cola-statemachine 的
+          项目背景 当前每次都要上百度，阿里找对应的命令   换了新的机器就要找一次  项目目标 一键解决安装 Docker 的问题  命令持久可用 全自动   关键事项 Linux 的机器不可以是 ARM 架构的   注意 Linux 的机器的基础架构 注意 Linux 的网络速度  具体脚本 下面是两种方式，具体看个人习惯  1、脚本的具体内容可以自己复制出来新建文件 # step 1: 安装必要的一些
         </div>
       </a>
 
@@ -237,304 +237,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-14 15:36" pubdate>
-              2023-03-14
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/13/sqqplol8u24qb1qa/" target="_self">
-          激活JRebel
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/13/sqqplol8u24qb1qa/" target="_self">
-        <div>
-          1、生成 GUIDhttps://www.guidgen.com/ 2、拼接地址http://127.0.0.1:8888/%7BGUID%7D 3、下载 winy 运行的插件并运行https://github.com/ilanyu/ReverseProxy/releases/tag/v1.4 4、在 setting 那里找到激活的位置
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-13 15:15" pubdate>
-              2023-03-13
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/07/oxao8qyeporktgyl/" target="_self">
-          规则引擎Drools
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/07/oxao8qyeporktgyl/" target="_self">
-        <div>
-          规则引擎概述 规则引擎，全称为业务规则管理系统，英文名为 BRMS(即 Business Rule Management System)。规则引擎的主要思想是将应用程序中的业务决策部分分离出来，并使用预定义的语义模块编写业务决策（业务规则），由用户或开发者在需要时进行配置、管理。需要注意的是规则引擎并不是一个具体的技术框架，而是指的一类系统，即业务规则管理系统。目前市面上具体的规则引擎产品有：dr
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-07 16:55" pubdate>
-              2023-03-07
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/07/uo7p97db2v3fxubr/" target="_self">
-          为什么有Full GC还会发生OOM
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/07/uo7p97db2v3fxubr/" target="_self">
-        <div>
-          既然在触发 full gc 的时候，年老代和持久代都会被清理，那么为什么还会出现 oom 问题？而且对于强引用，当内存空间不足，java 虚拟机宁愿抛出 oom 错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足问题； 那么 full gc 机制的存在有何意义？还是说 fgc 主要针对的是驻扎在老年的的软引用？ 既然如此，对于四种引用的方式如何抉择？总不能所有对象都创建引用队列使
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-07 16:17" pubdate>
-              2023-03-07
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/07/ri0y3cgry9p5u9et/" target="_self">
-          GC-案例
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/07/ri0y3cgry9p5u9et/" target="_self">
-        <div>
-          问题现象 订单服务器链接不上，超时。 没有熔断措施，导致其他上游服务超时。 服务器雪崩，整个环境不可用  项目目标  解决线上问题，排查问题，找到具体代码 分析 JVM   关键事项 使用 Visualvm 分析 下载 dump 文件，分析 dump 文件 基础环境：Java1.8 版本，IDEA，  复现问题 问题的主要就是对象在频繁的申请，频繁的放入，导致堆被撑爆   编写对应的代码，其实对应
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-07 10:54" pubdate>
-              2023-03-07
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/03/qleyofzi4m3x6y6n/" target="_self">
-          中间件——日志平台
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/qleyofzi4m3x6y6n/" target="_self">
-        <div>
-          1、项目背景 上一家离开的公司，使用的技术是 springcloud 的技术，日志是分散在各处的。当时的技术经理，让我搭建一套属于公司自己的日志系统，我做了相应了调研。有了以下的几个方案。   阿里日志系统，自带，可集成 开源的框架 Plumelog 传统的 ELK  2、方案分析 分析以上的框架和成本，最终决定用 plumelog 日志做就够用   每天线上的日志没有那么多，仅仅在商品大卖的时候
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-03 18:54" pubdate>
-              2023-03-03
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/03/oeaziez1mwb4q3so/" target="_self">
-          Docker——Nacos（单机）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/oeaziez1mwb4q3so/" target="_self">
-        <div>
-          项目背景 快速启动一个注册中心在本地  单机 Nacos 镜像docker run --name nacos-standalone -e MODE=standalone -d -p 8848:8848 -p 9848:9848 -p 9849:9849 nacos/nacos-server:2.0.0  单机 Nacos 镜像-Mysql 启动参考：  注意，这里面会用到.env 这个环境变量，记
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-03 18:39" pubdate>
-              2023-03-03
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/03/wxdfug2q1080b5c8/" target="_self">
-          Docker——Redis（单机）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/wxdfug2q1080b5c8/" target="_self">
-        <div>
-          项目背景 跑起来一个单体的 Redis 容器  单机 Redis 镜像docker run -itd --name redis -p 6379:6379 redis --requirepass &#x27;521521&#x27;
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-03 18:37" pubdate>
-              2023-03-03
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/03/uwuvbm7fcx5ohkt0/" target="_self">
-          Docker——Mysql（单机）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/uwuvbm7fcx5ohkt0/" target="_self">
-        <div>
-          项目背景 快速跑起来一个 Mysql 的镜像  单机 Mysql 镜像 5.7 版本  docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=521521 --name mysql -v /app/docker/mysql/my.cnf:/etc/mysql/my.cnf -v /app/docker/mysql/db:/var/lib/mysql m
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-03 18:18" pubdate>
-              2023-03-03
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/03/ada1oluaseecquo4/" target="_self">
-          Docker基础命令
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/03/ada1oluaseecquo4/" target="_self">
-        <div>
-          项目背景 经常要找一些 Docekr 的基础命令，这里面作一个总结  项目目标 了解&amp;熟悉 Docker 的一些命令  具体细节 查看当前 docker 有多少镜像  docker images   查看当前服务有多少容器  docker ps -a   docker 容器启动  # 举个例子 docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWOR
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-03 17:57" pubdate>
+            <time datetime="2023-03-03 12:16" pubdate>
               2023-03-03
             </time>
           </div>
@@ -549,7 +252,7 @@
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
     </span>
   </nav>
 
