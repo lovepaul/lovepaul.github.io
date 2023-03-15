@@ -24,12 +24,12 @@
 <meta property="og:description" content="1、项目背景 上一家离开的公司，使用的技术是 springcloud 的技术，日志是分散在各处的。当时的技术经理，让我搭建一套属于公司自己的日志系统，我做了相应了调研。有了以下的几个方案。   阿里日志系统，自带，可集成 开源的框架 Plumelog 传统的 ELK  2、方案分析 分析以上的框架和成本，最终决定用 plumelog 日志做就够用   每天线上的日志没有那么多，仅仅在商品大卖的时候">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/3009901/1677902853960-658e1927-c293-4450-834b-34bd42054b48.jpeg">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677846974029-33f8b758-05b4-42e8-8417-a04dc15ed12a.png#averageHue=%23fdfdfd&clientId=u0cc50340-0a4a-4&from=paste&height=633&id=ub521d54b&name=image.png&originHeight=891&originWidth=1749&originalType=binary%E2%88%B6=1&rotation=0&showTitle=true&size=57454&status=done&style=stroke&taskId=u273a92bf-6a27-4cbc-97e2-09a74562898&title=PlumeLog&width=1243">
+<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fnv4IhF5AfX4DvuhiHC_eBj-4AAJ.png">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904100326-93693f16-ba40-4946-b5a0-942cebe3aacd.png#averageHue=%238c7955&clientId=u697371e9-d4d8-4&from=paste&height=1000&id=ubafad99b&name=image.png&originHeight=1000&originWidth=1829&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=189103&status=done&style=stroke&taskId=u790d57fd-c8de-4792-8314-982c06a09ed&title=&width=1829">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904185819-6aaa50e6-9b88-4291-8f63-f6a17eeed68f.png#averageHue=%2380807f&clientId=u697371e9-d4d8-4&from=paste&height=1053&id=u8bebd60c&name=image.png&originHeight=1053&originWidth=1704&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=154752&status=done&style=stroke&taskId=ucff791a5-048d-474a-8b8d-184ce1ce339&title=&width=1704">
-<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FrOSB6tYoZM2QkXNcZ8wFhaoG65-.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904203289-a5e6701c-ad2e-4f09-ba48-bfbaa7b21c94.png#averageHue=%23fdfdfd&clientId=u697371e9-d4d8-4&from=paste&height=1053&id=uab656942&name=image.png&originHeight=1053&originWidth=1704&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=49746&status=done&style=stroke&taskId=u830df05e-eef3-4d66-b114-49b08d0b46e&title=&width=1704">
 <meta property="article:published_time" content="2023-03-03T10:54:39.000Z">
-<meta property="article:modified_time" content="2023-03-15T02:25:36.164Z">
+<meta property="article:modified_time" content="2023-03-15T03:08:57.318Z">
 <meta property="article:author" content="杨靖成">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/3009901/1677902853960-658e1927-c293-4450-834b-34bd42054b48.jpeg">
@@ -329,7 +329,7 @@ docker-compose up -d</code></pre></div>
 </blockquote>
 </li>
 </ol>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677846974029-33f8b758-05b4-42e8-8417-a04dc15ed12a.png#averageHue=%23fdfdfd&clientId=u0cc50340-0a4a-4&from=paste&height=633&id=ub521d54b&name=image.png&originHeight=891&originWidth=1749&originalType=binary%E2%88%B6=1&rotation=0&showTitle=true&size=57454&status=done&style=stroke&taskId=u273a92bf-6a27-4cbc-97e2-09a74562898&title=PlumeLog&width=1243" srcset="/img/loading.gif" lazyload alt="image.png" title="PlumeLog"></p>
+<p><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fnv4IhF5AfX4DvuhiHC_eBj-4AAJ.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="6、搭建客户端"><a href="#6、搭建客户端" class="headerlink" title="6、搭建客户端"></a>6、搭建客户端</h2><ul>
 <li>可以使用已经运行好的服务：<a target="_blank" rel="noopener" href="https://gitee.com/lovepaul/open-holiday.git">https://gitee.com/lovepaul/open-holiday.git</a></li>
 <li>也可以新建对应的 springboot 的微服务，如下代码三件套<ol>
@@ -773,7 +773,7 @@ spring.profiles.active=dev
                         &#125;
 </code></pre></div>
 
-<h2 id="7、检验结果"><a href="#7、检验结果" class="headerlink" title="7、检验结果"></a>7、检验结果</h2><p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904100326-93693f16-ba40-4946-b5a0-942cebe3aacd.png#averageHue=%238c7955&clientId=u697371e9-d4d8-4&from=paste&height=1000&id=ubafad99b&name=image.png&originHeight=1000&originWidth=1829&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=189103&status=done&style=stroke&taskId=u790d57fd-c8de-4792-8314-982c06a09ed&title=&width=1829" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904185819-6aaa50e6-9b88-4291-8f63-f6a17eeed68f.png#averageHue=%2380807f&clientId=u697371e9-d4d8-4&from=paste&height=1053&id=u8bebd60c&name=image.png&originHeight=1053&originWidth=1704&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=154752&status=done&style=stroke&taskId=ucff791a5-048d-474a-8b8d-184ce1ce339&title=&width=1704" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FrOSB6tYoZM2QkXNcZ8wFhaoG65-.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="7、检验结果"><a href="#7、检验结果" class="headerlink" title="7、检验结果"></a>7、检验结果</h2><p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904100326-93693f16-ba40-4946-b5a0-942cebe3aacd.png#averageHue=%238c7955&clientId=u697371e9-d4d8-4&from=paste&height=1000&id=ubafad99b&name=image.png&originHeight=1000&originWidth=1829&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=189103&status=done&style=stroke&taskId=u790d57fd-c8de-4792-8314-982c06a09ed&title=&width=1829" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904185819-6aaa50e6-9b88-4291-8f63-f6a17eeed68f.png#averageHue=%2380807f&clientId=u697371e9-d4d8-4&from=paste&height=1053&id=u8bebd60c&name=image.png&originHeight=1053&originWidth=1704&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=154752&status=done&style=stroke&taskId=ucff791a5-048d-474a-8b8d-184ce1ce339&title=&width=1704" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1677904203289-a5e6701c-ad2e-4f09-ba48-bfbaa7b21c94.png#averageHue=%23fdfdfd&clientId=u697371e9-d4d8-4&from=paste&height=1053&id=uab656942&name=image.png&originHeight=1053&originWidth=1704&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=49746&status=done&style=stroke&taskId=u830df05e-eef3-4d66-b114-49b08d0b46e&title=&width=1704" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 
                 
               </div>

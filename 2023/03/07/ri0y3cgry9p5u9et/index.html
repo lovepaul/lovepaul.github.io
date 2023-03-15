@@ -23,19 +23,19 @@
 <meta property="og:site_name" content="lensman&#39;s writing time">
 <meta property="og:description" content="问题现象 订单服务器链接不上，超时。 没有熔断措施，导致其他上游服务超时。 服务器雪崩，整个环境不可用  项目目标  解决线上问题，排查问题，找到具体代码 分析 JVM   关键事项 使用 Visualvm 分析 下载 dump 文件，分析 dump 文件 基础环境：Java1.8 版本，IDEA，  复现问题 问题的主要就是对象在频繁的申请，频繁的放入，导致堆被撑爆   编写对应的代码，其实对应">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159240614-bb8ad14b-ae6a-42f8-bc31-5256d75233c7.png#averageHue=%233d4144&clientId=udf18f225-0e62-4&from=paste&height=684&id=ua486f2a2&name=image.png&originHeight=684&originWidth=1060&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=48737&status=done&style=none&taskId=uda1f27df-2c70-43ce-883e-d8662aaaa92&title=&width=1060">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159642592-ee7ba654-4440-4f06-95c9-9c4d6ea17638.png#averageHue=%23373c41&clientId=udf18f225-0e62-4&from=paste&height=720&id=ue3cf7801&name=image.png&originHeight=720&originWidth=998&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=101538&status=done&style=none&taskId=u620d45d8-4afe-4a6e-93eb-b5083999063&title=&width=998">
 <meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fi9XYL9kCWleDq2ckH7zn43ICbpX.png">
 <meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fu36lWKUK60El8A11-bImj4RzCpa.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161403921-d19ea574-c80c-4a4a-b8c4-f44fbc0cec6e.png#averageHue=%23f4f0e7&clientId=udf18f225-0e62-4&from=paste&height=1043&id=u8b5aff11&name=image.png&originHeight=1043&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=97123&status=done&style=none&taskId=u896f7d79-ce60-4094-ac87-db81ef6e454&title=&width=1287">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FvShN2oc4ooKMb1-M4s3Z_pXcyzA.png">
 <meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FsNsdWX1vWpRXdzTTNZw8_oyt16B.png">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161208135-9a2e0fd6-c522-425c-9788-d0d93e91c7cd.png#averageHue=%23f7f5f4&clientId=udf18f225-0e62-4&from=paste&height=1043&id=ub727ee08&name=image.png&originHeight=1043&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=124687&status=done&style=none&taskId=u563e5d68-0ce2-4894-bf27-6b01886afe4&title=&width=1287">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161257356-2eea2e86-2226-4d28-bb4e-6860531ac942.png#averageHue=%23f3efec&clientId=udf18f225-0e62-4&from=paste&height=518&id=u1348b1ed&name=image.png&originHeight=518&originWidth=1280&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=113828&status=done&style=none&taskId=u157a943b-21b8-48cb-ab61-449d978b399&title=&width=1280">
 <meta property="article:published_time" content="2023-03-07T02:54:19.000Z">
-<meta property="article:modified_time" content="2023-03-15T02:25:36.326Z">
+<meta property="article:modified_time" content="2023-03-15T03:08:57.238Z">
 <meta property="article:author" content="杨靖成">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159240614-bb8ad14b-ae6a-42f8-bc31-5256d75233c7.png#averageHue=%233d4144&clientId=udf18f225-0e62-4&from=paste&height=684&id=ua486f2a2&name=image.png&originHeight=684&originWidth=1060&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=48737&status=done&style=none&taskId=uda1f27df-2c70-43ce-883e-d8662aaaa92&title=&width=1060">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -402,7 +402,7 @@
 
 -Xms200m -Xmx200m -XX:+HeapDumpOnOutOfMemoryError</code></pre></div>
 
-<p>记得设置好对应的 workdirectory 的工作目录<br><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png" srcset="/img/loading.gif" lazyload></p>
+<p>记得设置好对应的 workdirectory 的工作目录<br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159240614-bb8ad14b-ae6a-42f8-bc31-5256d75233c7.png#averageHue=%233d4144&clientId=udf18f225-0e62-4&from=paste&height=684&id=ua486f2a2&name=image.png&originHeight=684&originWidth=1060&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=48737&status=done&style=none&taskId=uda1f27df-2c70-43ce-883e-d8662aaaa92&title=&width=1060" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <ol start="3">
 <li><strong>IDEA 配置 VisualVM，安装对应的插件并配置</strong></li>
 </ol>
@@ -414,7 +414,7 @@
 <ol start="5">
 <li><strong>堆内存爆表</strong></li>
 </ol>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161403921-d19ea574-c80c-4a4a-b8c4-f44fbc0cec6e.png#averageHue=%23f4f0e7&clientId=udf18f225-0e62-4&from=paste&height=1043&id=u8b5aff11&name=image.png&originHeight=1043&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=97123&status=done&style=none&taskId=u896f7d79-ce60-4094-ac87-db81ef6e454&title=&width=1287" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FvShN2oc4ooKMb1-M4s3Z_pXcyzA.png" srcset="/img/loading.gif" lazyload></p>
 <ol start="6">
 <li><strong>查看 GC 的命令</strong></li>
 </ol>
