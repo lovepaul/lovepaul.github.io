@@ -23,19 +23,19 @@
 <meta property="og:site_name" content="lensman&#39;s writing time">
 <meta property="og:description" content="问题现象 订单服务器链接不上，超时。 没有熔断措施，导致其他上游服务超时。 服务器雪崩，整个环境不可用  项目目标  解决线上问题，排查问题，找到具体代码 分析 JVM   关键事项 使用 Visualvm 分析 下载 dump 文件，分析 dump 文件 基础环境：Java1.8 版本，IDEA，  复现问题 问题的主要就是对象在频繁的申请，频繁的放入，导致堆被撑爆   编写对应的代码，其实对应">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159642592-ee7ba654-4440-4f06-95c9-9c4d6ea17638.png#averageHue=%23373c41&clientId=udf18f225-0e62-4&from=paste&height=720&id=ue3cf7801&name=image.png&originHeight=720&originWidth=998&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=101538&status=done&style=none&taskId=u620d45d8-4afe-4a6e-93eb-b5083999063&title=&width=998">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159240614-bb8ad14b-ae6a-42f8-bc31-5256d75233c7.png#averageHue=%233d4144&clientId=udf18f225-0e62-4&from=paste&height=684&id=ua486f2a2&name=image.png&originHeight=684&originWidth=1060&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=48737&status=done&style=none&taskId=uda1f27df-2c70-43ce-883e-d8662aaaa92&title=&width=1060">
+<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FpSvS-GuvwQXCJzgQvSyNZKxmNgC.png">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159848269-68c0d9c6-a34b-485d-80b3-c5b4ee89162b.png#averageHue=%236d8d5b&clientId=udf18f225-0e62-4&from=paste&height=707&id=u6857e910&name=image.png&originHeight=707&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=124202&status=done&style=none&taskId=ua3802a2b-721f-470b-9a48-db41db07366&title=&width=1287">
 <meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fu36lWKUK60El8A11-bImj4RzCpa.png">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161403921-d19ea574-c80c-4a4a-b8c4-f44fbc0cec6e.png#averageHue=%23f4f0e7&clientId=udf18f225-0e62-4&from=paste&height=1043&id=u8b5aff11&name=image.png&originHeight=1043&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=97123&status=done&style=none&taskId=u896f7d79-ce60-4094-ac87-db81ef6e454&title=&width=1287">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161164610-915c52f7-617c-4e49-8f3a-efd5fb74622e.png#averageHue=%23f2efe9&clientId=udf18f225-0e62-4&from=paste&height=707&id=uca6b3d7f&name=image.png&originHeight=707&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=122162&status=done&style=none&taskId=u9c92d2ca-c203-4ae7-9586-5a263d81d74&title=&width=1287">
-<meta property="og:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FnwoLx4VsYW9F6Z-pXJ39F8zBhxc.png">
-<meta property="og:image" content="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FloP7RXRrklZW9Hldw3eKx0qPlG2.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161208135-9a2e0fd6-c522-425c-9788-d0d93e91c7cd.png#averageHue=%23f7f5f4&clientId=udf18f225-0e62-4&from=paste&height=1043&id=ub727ee08&name=image.png&originHeight=1043&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=124687&status=done&style=none&taskId=u563e5d68-0ce2-4894-bf27-6b01886afe4&title=&width=1287">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161257356-2eea2e86-2226-4d28-bb4e-6860531ac942.png#averageHue=%23f3efec&clientId=udf18f225-0e62-4&from=paste&height=518&id=u1348b1ed&name=image.png&originHeight=518&originWidth=1280&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=113828&status=done&style=none&taskId=u157a943b-21b8-48cb-ab61-449d978b399&title=&width=1280">
 <meta property="article:published_time" content="2023-03-07T02:54:19.000Z">
-<meta property="article:modified_time" content="2023-03-15T03:18:18.196Z">
+<meta property="article:modified_time" content="2023-03-15T03:20:22.248Z">
 <meta property="article:author" content="杨靖成">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159240614-bb8ad14b-ae6a-42f8-bc31-5256d75233c7.png#averageHue=%233d4144&clientId=udf18f225-0e62-4&from=paste&height=684&id=ua486f2a2&name=image.png&originHeight=684&originWidth=1060&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=48737&status=done&style=none&taskId=uda1f27df-2c70-43ce-883e-d8662aaaa92&title=&width=1060">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -402,11 +402,11 @@
 
 -Xms200m -Xmx200m -XX:+HeapDumpOnOutOfMemoryError</code></pre></div>
 
-<p>记得设置好对应的 workdirectory 的工作目录<br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/Fofio3VUPrtd2aqOXofh-CUBDXBz.png" srcset="/img/loading.gif" lazyload></p>
+<p>记得设置好对应的 workdirectory 的工作目录<br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159240614-bb8ad14b-ae6a-42f8-bc31-5256d75233c7.png#averageHue=%233d4144&clientId=udf18f225-0e62-4&from=paste&height=684&id=ua486f2a2&name=image.png&originHeight=684&originWidth=1060&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=48737&status=done&style=none&taskId=uda1f27df-2c70-43ce-883e-d8662aaaa92&title=&width=1060" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <ol start="3">
 <li><strong>IDEA 配置 VisualVM，安装对应的插件并配置</strong></li>
 </ol>
-<p>软件提供如下：<br><a target="_blank" rel="noopener" href="https://www.yuque.com/attachments/yuque/0/2023/zip/3009901/1678159735821-340d751a-0edd-4de5-8e13-a23c149c30a7.zip">visualvm_215.zip</a><br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678159642592-ee7ba654-4440-4f06-95c9-9c4d6ea17638.png#averageHue=%23373c41&clientId=udf18f225-0e62-4&from=paste&height=720&id=ue3cf7801&name=image.png&originHeight=720&originWidth=998&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=101538&status=done&style=none&taskId=u620d45d8-4afe-4a6e-93eb-b5083999063&title=&width=998" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>软件提供如下：<br><a target="_blank" rel="noopener" href="https://www.yuque.com/attachments/yuque/0/2023/zip/3009901/1678159735821-340d751a-0edd-4de5-8e13-a23c149c30a7.zip">visualvm_215.zip</a><br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FpSvS-GuvwQXCJzgQvSyNZKxmNgC.png" srcset="/img/loading.gif" lazyload></p>
 <ol start="4">
 <li><strong>用 visualVM 启动</strong></li>
 </ol>
@@ -423,7 +423,7 @@ sudo -u tomcat jstat -gcutil <span class="hljs-number">3168</span> <span class="
 sudo -u tomcat jstat -gc <span class="hljs-number">3168</span> <span class="hljs-number">10000</span>  #每隔<span class="hljs-number">10</span>秒显示堆使用大小，单位KB
 jmap -dump:format=b,file=filename pid #线上直接在已经假死的程序上获得dump文件的命令</code></pre></div>
 
-<p>在刚刚设置的 work 工作目录中有已经爆表的 dump 文件了<br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161164610-915c52f7-617c-4e49-8f3a-efd5fb74622e.png#averageHue=%23f2efe9&clientId=udf18f225-0e62-4&from=paste&height=707&id=uca6b3d7f&name=image.png&originHeight=707&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=122162&status=done&style=none&taskId=u9c92d2ca-c203-4ae7-9586-5a263d81d74&title=&width=1287" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="http://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FnwoLx4VsYW9F6Z-pXJ39F8zBhxc.png" srcset="/img/loading.gif" lazyload><br>数据直接给出了答案，这个对象，很大，这里出了问题<br><img src="https://lensman-oss.oss-cn-shanghai.aliyuncs.com/blog-images/FloP7RXRrklZW9Hldw3eKx0qPlG2.png" srcset="/img/loading.gif" lazyload></p>
+<p>在刚刚设置的 work 工作目录中有已经爆表的 dump 文件了<br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161164610-915c52f7-617c-4e49-8f3a-efd5fb74622e.png#averageHue=%23f2efe9&clientId=udf18f225-0e62-4&from=paste&height=707&id=uca6b3d7f&name=image.png&originHeight=707&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=122162&status=done&style=none&taskId=u9c92d2ca-c203-4ae7-9586-5a263d81d74&title=&width=1287" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161208135-9a2e0fd6-c522-425c-9788-d0d93e91c7cd.png#averageHue=%23f7f5f4&clientId=udf18f225-0e62-4&from=paste&height=1043&id=ub727ee08&name=image.png&originHeight=1043&originWidth=1287&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=124687&status=done&style=none&taskId=u563e5d68-0ce2-4894-bf27-6b01886afe4&title=&width=1287" srcset="/img/loading.gif" lazyload alt="image.png"><br>数据直接给出了答案，这个对象，很大，这里出了问题<br><img src="https://cdn.nlark.com/yuque/0/2023/png/3009901/1678161257356-2eea2e86-2226-4d28-bb4e-6860531ac942.png#averageHue=%23f3efec&clientId=udf18f225-0e62-4&from=paste&height=518&id=u1348b1ed&name=image.png&originHeight=518&originWidth=1280&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=113828&status=done&style=none&taskId=u157a943b-21b8-48cb-ab61-449d978b399&title=&width=1280" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <h2 id="分析问题"><a href="#分析问题" class="headerlink" title="分析问题"></a>分析问题</h2><ul>
 <li>Eden 区，一直在创建新的对象，一直在请求空间</li>
 <li>当 Eden 区达到百分百的时候，触发一次 YGC，然后进行垃圾回收，S0 和 S1 互换，存活的对象，会移动到老年 O 区</li>
